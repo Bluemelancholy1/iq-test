@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智商与逻辑测试</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --accent: #00ff88;
+            --accent2: #ff6b35;
+            --accent3: #a855f7;
+            --text: #e0e0e0;
+            --text-dim: #888;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 背景效果 */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-1 {
+            top: -200px;
+            left: -200px;
+            background: var(--accent);
+        }
+
+        .glow-2 {
+            bottom: -200px;
+            right: -200px;
+            background: var(--accent3);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* 进度条 */
+        .progress-container {
+            margin-bottom: 40px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent3));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* 题目卡片 */
+        .question-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-type {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .type-logic { background: rgba(0,255,136,0.15); color: var(--accent); }
+        .type-pattern { background: rgba(168,85,247,0.15); color: var(--accent3); }
+        .type-math { background: rgba(255,107,53,0.15); color: var(--accent2); }
+        .type-brain { background: rgba(255,193,7,0.15); color: #ffc107; }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            font-size: 80px;
+            font-weight: 900;
+            opacity: 0.05;
+            color: var(--accent);
+        }
+
+        .question-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 选项 */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(0,255,136,0.08);
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: rgba(0,255,136,0.15);
+            border-color: var(--accent);
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        .option-text {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* 按钮 */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #00cc6a);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,255,136,0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 结果页 */
+        .result-container {
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .iq-score {
+            font-size: 120px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin: 30px 0;
+        }
+
+        .iq-label {
+            font-size: 18px;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+        }
+
+        .result-rank {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .rank-genius { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
+        .rank-excellent { background: rgba(0,255,136,0.2); color: var(--accent); }
+        .rank-good { background: rgba(168,85,247,0.2); color: var(--accent3); }
+        .rank-average { background: rgba(255,255,255,0.1); color: var(--text); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 开始页 */
+        .start-screen {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .start-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+
+        .start-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .start-desc {
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .start-features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .feature-icon {
+            color: var(--accent);
+        }
+
+        /* 隐藏 */
+        .hidden { display: none !important; }
+
+        /* 解释 */
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,255,136,0.05);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .logo { font-size: 36px; }
+            .iq-score { font-size: 80px; }
+            .question-card { padding: 25px; }
+            .question-text { font-size: 17px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">BRAIN</div>
+            <div class="subtitle">智商 · 逻辑 · 脑筋急转弯</div>
+        </div>
+
+        <!-- 开始页 -->
+        <div id="startScreen" class="question-card start-screen">
+            <div class="start-icon">🧠</div>
+            <div class="start-title">准备好挑战了吗？</div>
+            <div class="start-desc">
+                本测试包含20道题目，涵盖逻辑推理、<br>
+                图形规律、数学计算和脑筋急转弯。<br>
+                测试你的智商与逻辑思维能力！
+            </div>
+            <div class="start-features">
+                <div class="feature"><span class="feature-icon">✓</span> 逻辑推理</div>
+                <div class="feature"><span class="feature-icon">✓</span> 图形规律</div>
+                <div class="feature"><span class="feature-icon">✓</span> 数学计算</div>
+                <div class="feature"><span class="feature-icon">✓</span> 脑筋急转弯</div>
+            </div>
+            <button class="btn btn-primary" onclick="startTest()">开始测试 →</button>
+        </div>
+
+        <!-- 测试区 -->
+        <div id="testScreen" class="hidden">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>题目 <span id="currentQ">1</span> / <span id="totalQ">20</span></span>
+                    <span id="timer">用时: 0:00</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+                <span class="question-number" id="qNumber">01</span>
+                <span class="question-type" id="qType">逻辑</span>
+                <div class="question-text" id="qText"></div>
+                <div class="options" id="options"></div>
+                <div class="explanation hidden" id="explanation"></div>
+            </div>
+
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>下一题 →</button>
+        </div>
+
+        <!-- 结果页 -->
+        <div id="resultScreen" class="hidden result-container">
+            <div class="subtitle">你的智商评估</div>
+            <div class="iq-score" id="iqScore">0</div>
+            <div class="iq-label">智商分数 (IQ)</div>
+            <div class="result-rank" id="resultRank">加载中...</div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="correctCount">0</div>
+                    <div class="stat-label">答对题数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="accuracy">0%</div>
+                    <div class="stat-label">正确率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalTime">0:00</div>
+                    <div class="stat-label">总用时</div>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat-item">
+                    <div class="stat-value" id="logicScore">0</div>
+                    <div class="stat-label">逻辑得分</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="brainScore">0</div>
+                    <div class="stat-label">脑筋急弯得分</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="restartTest()">重新测试 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // 题库
+        const questions = [
+            // 逻辑推理
+            {
+                type: 'logic',
+                typeLabel: '逻辑推理',
+                question: '如果所有的猫都是动物，有些动物会跑，是否可以确定有些猫会跑？',
+                options: ['可以确定', '不可以确定', '取决于猫的种类', '信息不足无法判断'],
+                answer: 1,
+                explanation: '虽然所有猫都是动物，但"有些动物会跑"并不特指猫，猫可能在"不会跑"的动物中，所以无法确定。'
+            },
+            {
+                type: 'logic',
+                typeLabel: '逻辑推理',
+                question: '小明对小华说："我比你所有朋友都聪明。" 小明是什么意思？',
+                options: ['小明比小华的所有朋友都聪明', '小明是所有朋友里最聪明的', '小明的智商比小华高', '小明比小华聪明一点点'],
+                answer: 0,
+                explanation: '"我比你所有朋友都聪明" = 小明比小华的朋友们都聪明，包括小华本人。'
+            },
+            {
+                type: 'logic',
+                typeLabel: '逻辑推理',
+                question: '在一个袋子里有红球和蓝球，总共10个。如果每次抽出一个球（不放回），抽到红球的概率会：',
+                options: ['逐渐增加', '逐渐减少', '保持不变', '先增加后减少'],
+                answer: 2,
+                explanation: '每次抽取时，红球数量和总球数的比例不变（如果有红球的话），概率始终相同。'
+            },
+            {
+                type: 'logic',
+                typeLabel: '逻辑推理',
+                question: '甲说乙在说谎，乙说丙在说谎，丙说甲和乙都在说谎。谁一定在说谎？',
+                options: ['只有甲', '只有乙', '只有丙', '甲和乙'],
+                answer: 3,
+                explanation: '假设丙说的是真的，则甲和乙都在说谎，那么甲说乙说谎就是真的（矛盾），所以丙在说谎，甲和乙都在说谎。'
+            },
+            {
+                type: 'logic',
+                typeLabel: '逻辑推理',
+                question: '如果今天下雨，那么地会湿。地是干的。今天一定没有下雨。这个推理是否正确？',
+                options: ['正确', '错误', '无法判断', '取决于时间'],
+                answer: 0,
+                explanation: '这是逆否命题：如果P则Q 等价于 如果非Q则非P。正确。'
+            },
+            // 图形规律
+            {
+                type: 'pattern',
+                typeLabel: '图形规律',
+                question: '观察规律：2, 6, 12, 20, 30, ? 下一个数字是什么？',
+                options: ['40', '42', '44', '38'],
+                answer: 1,
+                explanation: '规律是 n×(n+1)：1×2=2, 2×3=6, 3×4=12, 4×5=20, 5×6=30, 6×7=42'
+            },
+            {
+                type: 'pattern',
+                typeLabel: '图形规律',
+                question: '1, 1, 2, 3, 5, 8, ? 这串数字的下一个是什么？',
+                options: ['11', '12', '13', '15'],
+                answer: 2,
+                explanation: '这是斐波那契数列，每个数是前两个数之和：1+1=2, 2+3=5, 5+8=13'
+            },
+            {
+                type: 'pattern',
+                typeLabel: '图形规律',
+                question: '如果 3 + 5 = 16, 4 + 6 = 20, 5 + 7 = 24, 那么 6 + 8 = ?',
+                options: ['26', '28', '30', '32'],
+                answer: 1,
+                explanation: '规律是 (a + b) × 2：3+5=16 (8×2), 4+6=20 (10×2), 5+7=24 (12×2), 6+8=28 (14×2)'
+            },
+            {
+                type: 'pattern',
+                typeLabel: '图形规律',
+                question: '找规律：100, 98, 94, 88, 80, ?',
+                options: ['70', '72', '74', '68'],
+                answer: 0,
+                explanation: '差值递增：2, 4, 6, 8, 10，所以 80-10=70'
+            },
+            // 数学计算
+            {
+                type: 'math',
+                typeLabel: '数学计算',
+                question: '一个水池有进水和出水两根管。单开进水管8小时注满，单开排水管12小时放完。同时打开，注满需要多少小时？',
+                options: ['20小时', '24小时', '20小时', '24小时'],
+                answer: 3,
+                explanation: '进水速度1/8，出水速度1/12，净速度=1/8-1/12=1/24，所以需要24小时。'
+            },
+            {
+                type: 'math',
+                typeLabel: '数学计算',
+                question: '小明买了3支铅笔和2块橡皮共花18元，小红买同样的4支铅笔和3块橡皮共花25元。铅笔和橡皮单价各是多少？',
+                options: ['铅笔4元,橡皮3元', '铅笔3元,橡皮4元', '铅笔5元,橡皮2元', '铅笔2元,橡皮5元'],
+                answer: 0,
+                explanation: '解方程：3x+2y=18, 4x+3y=25，得x=4(铅笔), y=3(橡皮)'
+            },
+            {
+                type: 'math',
+                typeLabel: '数学计算',
+                question: '计算：1 + 2 + 3 + ... + 100 = ?',
+                options: ['5050', '5000', '5100', '4950'],
+                answer: 0,
+                explanation: '等差数列求和：(1+100)×100÷2 = 5050'
+            },
+            {
+                type: 'math',
+                typeLabel: '数学计算',
+                question: '一艘船顺水航行60公里需要3小时，逆水航行同样的距离需要4小时。静水中的船速和水流速分别是多少？',
+                options: ['船速17.5km/h, 水速2.5km/h', '船速15km/h, 水速5km/h', '船速20km/h, 水速3km/h', '船速18km/h, 水速4km/h'],
+                answer: 0,
+                explanation: '顺速=60/3=20, 逆速=60/4=15, 船速=(20+15)/2=17.5, 水速=(20-15)/2=2.5'
+            },
+            // 脑筋急转弯
+            {
+                type: 'brain',
+                typeLabel: '脑筋急转弯',
+                question: '什么人整天无所事事，却能买房买车，走上人生巅峰？',
+                options: ['富二代', '骗子', '蜗牛', '做梦的人'],
+                answer: 2,
+                explanation: '蜗牛！！！(无牵无挂 → 无车无房... 等等，蜗牛有房！还背着房子走遍天下！)'
+            },
+            {
+                type: 'brain',
+                typeLabel: '脑筋急转弯',
+                question: '什么路最不能走？',
+                options: ['死路', '弯路', '电路', '绝路'],
+                answer: 2,
+                explanation: '"电路"最不能走，因为会触电！（或者理解为：什么路最"短路"？）'
+            },
+            {
+                type: 'brain',
+                typeLabel: '脑筋急转弯',
+                question: '什么动物最容易摔倒？',
+                options: ['熊猫', '斑马', '狐狸', '变色龙'],
+                answer: 2,
+                explanation: '狐狸狡猾（脚滑）！🐾'
+            },
+            {
+                type: 'brain',
+                typeLabel: '脑筋急转弯',
+                question: '小明站在北京，却不在中国境内，他站在哪里？',
+                options: ['月球', '太空站', '天安门广场', '做梦'],
+                answer: 1,
+                explanation: '北京是太空站的名字！🚀'
+            },
+            {
+                type: 'brain',
+                typeLabel: '脑筋急转弯',
+                question: '一个盒子里面有几个角？',
+                options: ['4个', '8个', '0个', '取决于盒子形状'],
+                answer: 2,
+                explanation: '盒子里面是空的，没有角！📦'
+            },
+            {
+                type: 'brain',
+                typeLabel: '脑筋急转弯',
+                question: '什么人最容易被蚊子咬？',
+                options: ['O型血', '爱吃甜食', '穿黑衣服', '好人（"好"蚊）'],
+                answer: 3,
+                explanation: '"好蚊"！因为蚊子专挑"好人"咬 😄'
+            },
+            {
+                type: 'logic',
+                typeLabel: '逻辑推理',
+                question: '有100个人排队买东西，第一个人每买一件东西需要1分钟，第二个人需要2分钟，以此类推。请问第30个人买完东西需要等多久？',
+                options: ['30分钟', '900分钟', '0分钟', '无法计算'],
+                answer: 2,
+                explanation: '每个人是依次买自己的东西，第30个人买完直接走，不需要等别人。不存在"等"这个概念。'
+            }
+        ];
+
+        let currentIndex = 0;
+        let selectedAnswer = -1;
+        let startTime = null;
+        let correctCount = 0;
+        let logicCorrect = 0;
+        let brainCorrect = 0;
+        let shuffledQuestions = [];
+
+        function shuffleArray(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.remove('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            
+            shuffledQuestions = shuffleArray(questions).slice(0, 20);
+            document.getElementById('totalQ').textContent = shuffledQuestions.length;
+            
+            startTime = Date.now();
+            updateTimer();
+            showQuestion();
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+            document.getElementById('timer').textContent = `用时: ${mins}:${secs.toString().padStart(2, '0')}`;
+            if (!document.getElementById('resultScreen').classList.contains('hidden')) return;
+            setTimeout(updateTimer, 1000);
+        }
+
+        function showQuestion() {
+            const q = shuffledQuestions[currentIndex];
+            selectedAnswer = -1;
+            
+            document.getElementById('currentQ').textContent = currentIndex + 1;
+            document.getElementById('qNumber').textContent = String(currentIndex + 1).padStart(2, '0');
+            document.getElementById('progressFill').style.width = `${((currentIndex + 1) / shuffledQuestions.length) * 100}%`;
+            
+            const typeEl = document.getElementById('qType');
+            typeEl.textContent = q.typeLabel;
+            typeEl.className = 'question-type type-' + q.type;
+            
+            document.getElementById('qText').textContent = q.question;
+            
+            const optionsEl = document.getElementById('options');
+            const letters = ['A', 'B', 'C', 'D'];
+            optionsEl.innerHTML = q.options.map((opt, i) => `
+                <div class="option" onclick="selectOption(${i})">
+                    <span class="option-letter">${letters[i]}</span>
+                    <span class="option-text">${opt}</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('explanation').classList.add('hidden');
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').textContent = currentIndex === shuffledQuestions.length - 1 ? '查看结果 →' : '下一题 →';
+            
+            // 动画
+            const card = document.getElementById('questionCard');
+            card.style.animation = 'none';
+            card.offsetHeight;
+            card.style.animation = 'fadeIn 0.5s ease';
+        }
+
+        function selectOption(index) {
+            selectedAnswer = index;
+            
+            document.querySelectorAll('.option').forEach((opt, i) => {
+                opt.classList.toggle('selected', i === index);
+            });
+            
+            document.getElementById('nextBtn').disabled = false;
+            
+            // 记录答案
+            const q = shuffledQuestions[currentIndex];
+            if (index === q.answer) {
+                correctCount++;
+                if (q.type === 'logic' || q.type === 'math' || q.type === 'pattern') {
+                    logicCorrect++;
+                } else {
+                    brainCorrect++;
+                }
+            }
+        }
+
+        function nextQuestion() {
+            // 显示解释
+            const q = shuffledQuestions[currentIndex];
+            const expEl = document.getElementById('explanation');
+            expEl.textContent = selectedAnswer === q.answer ? 
+                '✅ 回答正确！' + (q.explanation ? ' ' + q.explanation : '') :
+                '❌ 正确答案是：' + q.options[q.answer] + '。' + (q.explanation ? ' ' + q.explanation : '');
+            expEl.classList.remove('hidden');
+            
+            if (selectedAnswer !== q.answer) {
+                // 标记正确选项
+                document.querySelectorAll('.option').forEach((opt, i) => {
+                    if (i === q.answer) opt.style.borderColor = 'var(--accent)';
+                    if (i === selectedAnswer && i !== q.answer) opt.style.borderColor = 'var(--accent2)';
+                });
+            }
+            
+            // 禁用选项
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+            
+            // 短暂延迟后进入下一题
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex >= shuffledQuestions.length) {
+                    showResult();
+                } else {
+                    showQuestion();
+                }
+            }, selectedAnswer === shuffledQuestions[currentIndex]?.answer ? 1000 : 2500);
+        }
+
+        function showResult() {
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+            
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+            
+            // 计算IQ (基础100，每对一题+5)
+            const iq = 85 + (correctCount * 7);
+            document.getElementById('iqScore').textContent = Math.min(Math.max(iq, 60), 160);
+            
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('accuracy').textContent = Math.round((correctCount / shuffledQuestions.length) * 100) + '%';
+            document.getElementById('totalTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('logicScore').textContent = logicCorrect + '/15';
+            document.getElementById('brainScore').textContent = brainCorrect + '/5';
+            
+            const rankEl = document.getElementById('resultRank');
+            const score = parseInt(document.getElementById('iqScore').textContent);
+            if (score >= 140) {
+                rankEl.textContent = '🌟 天才级别';
+                rankEl.className = 'result-rank rank-genius';
+            } else if (score >= 120) {
+                rankEl.textContent = '🧠 优秀';
+                rankEl.className = 'result-rank rank-excellent';
+            } else if (score >= 100) {
+                rankEl.textContent = '👍 良好';
+                rankEl.className = 'result-rank rank-good';
+            } else {
+                rankEl.textContent = '💪 继续加油';
+                rankEl.className = 'result-rank rank-average';
+            }
+        }
+
+        function restartTest() {
+            currentIndex = 0;
+            correctCount = 0;
+            logicCorrect = 0;
+            brainCorrect = 0;
+            startTime = Date.now();
+            
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
