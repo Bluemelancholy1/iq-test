@@ -166,36 +166,31 @@
                 <div class="logo-icon">🧠</div>
                 <div class="logo">BRAIN</div>
             </div>
-            <div class="subtitle">智商 · 逻辑 · 脑筋急转弯</div>
+            <div class="subtitle">行情 · 知识 · 逻辑</div>
         </div>
         <div id="startScreen" class="card start-screen">
             <div class="start-hero">
                 <div class="hero-icon">💡</div>
                 <div class="start-title">准备好挑战了吗？</div>
                 <div class="start-desc">
-                    题库包含 20 道精心设计的题目<br>
-                    每次随机挑战 20 道，涵盖逻辑推理、图形规律、<br>数学计算和脑筋急转弯
+                    题库包含精心设计的题目<br>
+                    每次随机挑战，涵盖行情分析、专业知识、<br>逻辑推理
                 </div>
             </div>
             <div class="feature-grid">
                 <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-name">行情</div>
+                    <div class="feature-count">5 道题目</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-name">知识</div>
+                    <div class="feature-count">5 道题目</div>
+                </div>
+                <div class="feature-item">
                     <div class="feature-icon">🧩</div>
-                    <div class="feature-name">逻辑推理</div>
-                    <div class="feature-count">5 道题目</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📐</div>
-                    <div class="feature-name">图形规律</div>
-                    <div class="feature-count">5 道题目</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔢</div>
-                    <div class="feature-name">数学计算</div>
-                    <div class="feature-count">5 道题目</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-name">脑筋急转弯</div>
+                    <div class="feature-name">逻辑</div>
                     <div class="feature-count">5 道题目</div>
                 </div>
             </div>
@@ -264,11 +259,11 @@
                 <div class="stats-grid-2 animate-in" style="animation-delay: 0.2s">
                     <div class="stat-card">
                         <div class="stat-value accent" id="logicScore">0</div>
-                        <div class="stat-label">期货知识得分</div>
+                        <div class="stat-label">行情得分</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value orange" id="brainScore">0</div>
-                        <div class="stat-label">附加得分</div>
+                        <div class="stat-value purple" id="patternScore">0</div>
+                        <div class="stat-label">知识得分</div>
                     </div>
                 </div>
                 <button class="btn btn-primary animate-in" style="animation-delay: 0.3s" onclick="restartTest()">重新挑战 <span>🔄</span></button>
@@ -278,17 +273,18 @@
 
     <script>
     const questions = [
-        { type: 'logic', typeLabel: '期货知识', question: '我们是什么平台？', options: ['大粤期货', '远大期货', '中阳期货', '大奥期货'], answer: 0, explanation: '我们的平台是大粤期货！' },
-        { type: 'logic', typeLabel: '期货知识', question: '我们的盘面叫什么？', options: ['金浩盘面', '智星盘面', '中阳盘面', '远大盘面'], answer: 1, explanation: '我们的盘面是智星盘面！' },
-        { type: 'logic', typeLabel: '期货知识', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' }
+        { type: 'math', typeLabel: '行情', question: '我们是什么平台？', options: ['大粤期货', '远大期货', '中阳期货', '大奥期货'], answer: 0, explanation: '我们的平台是大粤期货！' },
+        { type: 'pattern', typeLabel: '知识', question: '我们的盘面叫什么？', options: ['金浩盘面', '智星盘面', '中阳盘面', '远大盘面'], answer: 1, explanation: '我们的盘面是智星盘面！' },
+        { type: 'logic', typeLabel: '逻辑', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' }
     ];
 
     let currentIndex = 0;
     let selectedAnswer = -1;
     let startTime = null;
     let correctCount = 0;
+    let mathCorrect = 0;
+    let patternCorrect = 0;
     let logicCorrect = 0;
-    let brainCorrect = 0;
     let shuffledQuestions = [];
     let questionTimeLeft = 10;
     let questionTimerInterval = null;
@@ -394,11 +390,9 @@
         
         if (isCorrect) {
             correctCount++;
-            if (q.type === 'logic' || q.type === 'math' || q.type === 'pattern') {
-                logicCorrect++;
-            } else {
-                brainCorrect++;
-            }
+            if (q.type === 'math') mathCorrect++;
+            else if (q.type === 'pattern') patternCorrect++;
+            else logicCorrect++;
         }
 
         document.querySelectorAll('.option').forEach((opt, i) => {
@@ -446,8 +440,8 @@
         document.getElementById('correctCount').textContent = correctCount;
         document.getElementById('accuracy').textContent = Math.round((correctCount / shuffledQuestions.length) * 100) + '%';
         document.getElementById('totalTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-        document.getElementById('logicScore').textContent = logicCorrect + '/3';
-        document.getElementById('brainScore').textContent = brainCorrect + '/0';
+        document.getElementById('logicScore').textContent = mathCorrect + '/' + shuffledQuestions.filter(q => q.type === 'math').length;
+        document.getElementById('patternScore').textContent = patternCorrect + '/' + shuffledQuestions.filter(q => q.type === 'pattern').length;
         const rankEl = document.getElementById('resultRank');
         const msgEl = document.getElementById('resultMessage');
         const score = finalIQ;
@@ -473,8 +467,9 @@
     function restartTest() {
         currentIndex = 0;
         correctCount = 0;
+        mathCorrect = 0;
+        patternCorrect = 0;
         logicCorrect = 0;
-        brainCorrect = 0;
         startTime = Date.now();
         document.getElementById('resultScreen').classList.add('hidden');
         document.getElementById('startScreen').classList.remove('hidden');
