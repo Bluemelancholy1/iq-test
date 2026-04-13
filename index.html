@@ -452,12 +452,9 @@
 
     function selectOption(index) {
         selectedAnswer = index;
-        document.querySelectorAll('.option').forEach((opt, i) => {
-            opt.classList.toggle('selected', i === index);
-        });
-        document.getElementById('nextBtn').disabled = false;
         const q = shuffledQuestions[currentIndex];
-        if (index === q.answer) {
+        const isCorrect = index === q.answer;
+        if (isCorrect) {
             correctCount++;
             if (q.type === 'logic' || q.type === 'math' || q.type === 'pattern') {
                 logicCorrect++;
@@ -465,32 +462,35 @@
                 brainCorrect++;
             }
         }
-    }
 
-    function nextQuestion() {
-        const q = shuffledQuestions[currentIndex];
+        document.querySelectorAll('.option').forEach((opt, i) => {
+            opt.classList.remove('selected');
+            if (i === q.answer) opt.classList.add('correct');
+            if (i === index && i !== q.answer) opt.classList.add('wrong');
+            opt.style.pointerEvents = 'none';
+        });
+
         const expEl = document.getElementById('explanation');
-        const isCorrect = selectedAnswer === q.answer;
         expEl.innerHTML = isCorrect ?
             '✅ 回答正确！' + (q.explanation ? '<br>' + q.explanation : '') :
             '❌ 正确答案是：' + q.options[q.answer] + '。<br>' + (q.explanation ? q.explanation : '');
         expEl.className = 'explanation' + (isCorrect ? '' : ' wrong');
         expEl.classList.remove('hidden');
-        if (!isCorrect) {
-            document.querySelectorAll('.option').forEach((opt, i) => {
-                if (i === q.answer) opt.classList.add('correct');
-                if (i === selectedAnswer && i !== q.answer) opt.classList.add('wrong');
-            });
+
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = currentIndex === shuffledQuestions.length - 1 ?
+            '查看结果 <span>📊</span>' :
+            '下一题 <span>→</span>';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex >= shuffledQuestions.length) {
+            showResult();
+        } else {
+            showQuestion();
         }
-        document.querySelectorAll('.option').forEach(opt => { opt.style.pointerEvents = 'none'; });
-        setTimeout(() => {
-            currentIndex++;
-            if (currentIndex >= shuffledQuestions.length) {
-                showResult();
-            } else {
-                showQuestion();
-            }
-        }, isCorrect ? 1200 : 3000);
     }
 
     function showResult() {
