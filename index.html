@@ -196,11 +196,11 @@
             </div>
             <div class="stats-preview">
                 <div class="preview-stat">
-                    <div class="value">3</div>
+                    <div class="value">4</div>
                     <div class="label">总题库</div>
                 </div>
                 <div class="preview-stat">
-                    <div class="value">3</div>
+                    <div class="value">4</div>
                     <div class="label">每次挑战</div>
                 </div>
                 <div class="preview-stat">
@@ -256,7 +256,7 @@
                         <div class="stat-label">总用时</div>
                     </div>
                 </div>
-                <div class="stats-grid-2 animate-in" style="animation-delay: 0.2s">
+                <div class="stats-grid animate-in" style="animation-delay: 0.2s">
                     <div class="stat-card">
                         <div class="stat-value accent" id="logicScore">0</div>
                         <div class="stat-label">行情得分</div>
@@ -264,6 +264,10 @@
                     <div class="stat-card">
                         <div class="stat-value purple" id="patternScore">0</div>
                         <div class="stat-label">知识得分</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value orange" id="knowledgeScore">0</div>
+                        <div class="stat-label">逻辑得分</div>
                     </div>
                 </div>
                 <button class="btn btn-primary animate-in" style="animation-delay: 0.3s" onclick="restartTest()">重新挑战 <span>🔄</span></button>
@@ -275,7 +279,8 @@
     const questions = [
         { type: 'math', typeLabel: '行情', question: '我们是什么平台？', options: ['大粤期货', '远大期货', '中阳期货', '大奥期货'], answer: 0, explanation: '我们的平台是大粤期货！' },
         { type: 'pattern', typeLabel: '知识', question: '我们的盘面叫什么？', options: ['金浩盘面', '智星盘面', '中阳盘面', '远大盘面'], answer: 1, explanation: '我们的盘面是智星盘面！' },
-        { type: 'logic', typeLabel: '逻辑', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' }
+        { type: 'math', typeLabel: '行情', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' },
+        { type: 'math', typeLabel: '行情', question: '我们的软件叫什么？', options: ['金浩通', '大粤通', '智星通', '中阳通'], answer: 0, explanation: '我们的软件叫金浩通！' }
     ];
 
     let currentIndex = 0;
@@ -302,7 +307,7 @@
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('testScreen').classList.remove('hidden');
         document.getElementById('resultScreen').classList.add('hidden');
-        shuffledQuestions = shuffleArray(questions).slice(0, 3);
+        shuffledQuestions = shuffleArray(questions).slice(0, 4);
         document.getElementById('totalQ').textContent = shuffledQuestions.length;
         startTime = Date.now();
         updateTimer();
@@ -442,6 +447,7 @@
         document.getElementById('totalTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
         document.getElementById('logicScore').textContent = mathCorrect + '/' + shuffledQuestions.filter(q => q.type === 'math').length;
         document.getElementById('patternScore').textContent = patternCorrect + '/' + shuffledQuestions.filter(q => q.type === 'pattern').length;
+        document.getElementById('knowledgeScore').textContent = logicCorrect + '/' + shuffledQuestions.filter(q => q.type === 'logic').length;
         const rankEl = document.getElementById('resultRank');
         const msgEl = document.getElementById('resultMessage');
         const score = finalIQ;
