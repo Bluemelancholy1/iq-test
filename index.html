@@ -166,7 +166,7 @@
                 <div class="logo-icon">🧠</div>
                 <div class="logo">BRAIN</div>
             </div>
-            <div class="subtitle">行情 · 知识 · 逻辑</div>
+            <div class="subtitle">行情 · 知识 · 逻辑 · 软件</div>
         </div>
         <div id="startScreen" class="card start-screen">
             <div class="start-hero">
@@ -174,7 +174,7 @@
                 <div class="start-title">准备好挑战了吗？</div>
                 <div class="start-desc">
                     题库包含精心设计的题目<br>
-                    每次随机挑战，涵盖行情分析、专业知识、<br>逻辑推理
+                    每次随机挑战，涵盖行情分析、专业知识、<br>逻辑推理、软件操作
                 </div>
             </div>
             <div class="feature-grid">
@@ -191,6 +191,11 @@
                 <div class="feature-item">
                     <div class="feature-icon">🧩</div>
                     <div class="feature-name">逻辑</div>
+                    <div class="feature-count">5 道题目</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-name">软件</div>
                     <div class="feature-count">5 道题目</div>
                 </div>
             </div>
@@ -269,6 +274,10 @@
                         <div class="stat-value orange" id="knowledgeScore">0</div>
                         <div class="stat-label">逻辑得分</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color:#ffc107" id="softwareScore">0</div>
+                        <div class="stat-label">软件得分</div>
+                    </div>
                 </div>
                 <button class="btn btn-primary animate-in" style="animation-delay: 0.3s" onclick="restartTest()">重新挑战 <span>🔄</span></button>
             </div>
@@ -279,8 +288,8 @@
     const questions = [
         { type: 'math', typeLabel: '行情', question: '我们是什么平台？', options: ['大粤期货', '远大期货', '中阳期货', '大奥期货'], answer: 0, explanation: '我们的平台是大粤期货！' },
         { type: 'pattern', typeLabel: '知识', question: '我们的盘面叫什么？', options: ['金浩盘面', '智星盘面', '中阳盘面', '远大盘面'], answer: 1, explanation: '我们的盘面是智星盘面！' },
-        { type: 'math', typeLabel: '行情', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' },
-        { type: 'math', typeLabel: '行情', question: '我们的软件叫什么？', options: ['金浩通', '大粤通', '智星通', '中阳通'], answer: 0, explanation: '我们的软件叫金浩通！' }
+        { type: 'logic', typeLabel: '逻辑', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' },
+        { type: 'brain', typeLabel: '软件', question: '我们的软件叫什么？', options: ['金浩通', '大粤通', '智星通', '中阳通'], answer: 0, explanation: '我们的软件叫金浩通！' }
     ];
 
     let currentIndex = 0;
@@ -290,6 +299,7 @@
     let mathCorrect = 0;
     let patternCorrect = 0;
     let logicCorrect = 0;
+    let brainCorrect = 0;
     let shuffledQuestions = [];
     let questionTimeLeft = 10;
     let questionTimerInterval = null;
@@ -397,7 +407,8 @@
             correctCount++;
             if (q.type === 'math') mathCorrect++;
             else if (q.type === 'pattern') patternCorrect++;
-            else logicCorrect++;
+            else if (q.type === 'logic') logicCorrect++;
+            else brainCorrect++;
         }
 
         document.querySelectorAll('.option').forEach((opt, i) => {
@@ -448,6 +459,7 @@
         document.getElementById('logicScore').textContent = mathCorrect + '/' + shuffledQuestions.filter(q => q.type === 'math').length;
         document.getElementById('patternScore').textContent = patternCorrect + '/' + shuffledQuestions.filter(q => q.type === 'pattern').length;
         document.getElementById('knowledgeScore').textContent = logicCorrect + '/' + shuffledQuestions.filter(q => q.type === 'logic').length;
+        document.getElementById('softwareScore').textContent = brainCorrect + '/' + shuffledQuestions.filter(q => q.type === 'brain').length;
         const rankEl = document.getElementById('resultRank');
         const msgEl = document.getElementById('resultMessage');
         const score = finalIQ;
@@ -476,6 +488,7 @@
         mathCorrect = 0;
         patternCorrect = 0;
         logicCorrect = 0;
+        brainCorrect = 0;
         startTime = Date.now();
         document.getElementById('resultScreen').classList.add('hidden');
         document.getElementById('startScreen').classList.remove('hidden');
