@@ -191,7 +191,7 @@
                 <div class="feature-item">
                     <div class="feature-icon">🧩</div>
                     <div class="feature-name">逻辑</div>
-                    <div class="feature-count">4 道题目</div>
+                    <div class="feature-count">5 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">💻</div>
@@ -201,11 +201,11 @@
             </div>
             <div class="stats-preview">
                 <div class="preview-stat">
-                    <div class="value">22</div>
+                    <div class="value">23</div>
                     <div class="label">总题库</div>
                 </div>
                 <div class="preview-stat">
-                    <div class="value">22</div>
+                    <div class="value">23</div>
                     <div class="label">每次挑战</div>
                 </div>
                 <div class="preview-stat">
@@ -307,7 +307,8 @@
         { type: 'brain', typeLabel: '软件', question: '手机端止盈止损开仓在哪？', options: ['首页左上角菜单按钮', '底部导航栏交易入口', '交易界面右上方盾牌图标', '我的页面设置中'], answer: 2, explanation: '在交易界面右上方找到盾牌图标，点击即可设置止盈止损！' },
         { type: 'brain', typeLabel: '软件', question: '客户端止盈止损开仓在哪？', options: ['交易界面右上方盾牌图标', '首页左上角菜单按钮', '在左下方打钩', '我的页面设置中'], answer: 2, explanation: '止盈止损开仓需要在左下方打钩设置！' },
         { type: 'logic', typeLabel: '逻辑', question: '美原油往上波动10美金赚多少钱？', options: ['100', '1000', '10000', '10'], answer: 2, explanation: '美原油每手1000桶，波动1美金=1000美元，10美金=10000美元！' },
-        { type: 'logic', typeLabel: '逻辑', question: '小纳指往上波动10美金赚多少人民币？', options: ['1596', '2000', '1500', '1600'], answer: 0, explanation: '小纳指每手20美元，波动10美金=200美元，约1596元人民币！' }
+        { type: 'logic', typeLabel: '逻辑', question: '小纳指往上波动10美金赚多少人民币？', options: ['1596', '2000', '1500', '1600'], answer: 0, explanation: '小纳指每手20美元，波动10美金=200美元，约1596元人民币！' },
+        { type: 'logic', typeLabel: '逻辑', question: '美黄金做2手保证金多少？', options: ['300美金', '400美金', '600美金', '500美金'], answer: 2, explanation: '美黄金保证金约300美金/手，做2手保证金约600美金！' }
     ];
 
     let currentIndex = 0;
@@ -335,7 +336,7 @@
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('testScreen').classList.remove('hidden');
         document.getElementById('resultScreen').classList.add('hidden');
-        shuffledQuestions = shuffleArray(questions).slice(0, 22);
+        shuffledQuestions = shuffleArray(questions).slice(0, 23);
         document.getElementById('totalQ').textContent = shuffledQuestions.length;
         startTime = Date.now();
         updateTimer();
