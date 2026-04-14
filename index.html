@@ -599,9 +599,11 @@
         document.getElementById('startScreen').classList.remove('hidden');
     }
 
-    // 页面加载时：如果有名字则自动开始测试（从排行榜过来）
+    // 页面加载时：检测是否从排行榜过来（通过URL参数）
     (function init() {
-        if (playerName) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('from') === 'leaderboard' && playerName) {
+            // 从排行榜过来且有名字，自动开始
             startTest();
         }
     })();
