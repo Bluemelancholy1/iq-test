@@ -130,6 +130,7 @@
         .stat-value.accent { color: var(--accent); }
         .stat-value.purple { color: var(--accent3); }
         .stat-value.orange { color: var(--accent2); }
+        .stat-value.yellow { color: #ffc107; }
         .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .stats-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px; }
         .hidden { display: none !important; }
@@ -203,7 +204,7 @@
             </div>
             <div class="stats-preview">
                 <div class="preview-stat">
-                    <div class="value">30</div>
+                    <div class="value">29</div>
                     <div class="label">总题库</div>
                 </div>
                 <div class="preview-stat">
@@ -263,9 +264,9 @@
                         <div class="stat-label">总用时</div>
                     </div>
                 </div>
-                <div class="stats-grid animate-in" style="animation-delay: 0.2s">
+                <div class="stats-grid-2 animate-in" style="animation-delay: 0.2s">
                     <div class="stat-card">
-                        <div class="stat-value accent" id="logicScore">0</div>
+                        <div class="stat-value accent" id="mathScore">0</div>
                         <div class="stat-label">行情得分</div>
                     </div>
                     <div class="stat-card">
@@ -273,11 +274,11 @@
                         <div class="stat-label">知识得分</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value orange" id="knowledgeScore">0</div>
+                        <div class="stat-value orange" id="logicScore">0</div>
                         <div class="stat-label">逻辑得分</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" style="color:#ffc107" id="softwareScore">0</div>
+                        <div class="stat-value yellow" id="brainScore">0</div>
                         <div class="stat-label">软件得分</div>
                     </div>
                 </div>
@@ -287,6 +288,10 @@
     </div>
 
     <script>
+    // Supabase 配置
+    const SB_URL = 'https://jufodimlnwkzxktrunjx.supabase.co';
+    const SB_KEY = 'sb_publishable_sdXOBqMrwiQPHib0NW3zPg_0ihQwwHc';
+
     const questions = [
         { type: 'math', typeLabel: '行情', question: '我们是什么平台？', options: ['大粤期货', '大月期货', '大奥期货', '大日期货'], answer: 0, explanation: '我们的平台是大粤期货！' },
         { type: 'pattern', typeLabel: '知识', question: '我们的盘面叫什么？', options: ['智能盘面', '智星盘面', '智障盘面', '智慧盘面'], answer: 1, explanation: '我们的盘面是智星盘面！' },
@@ -324,15 +329,15 @@
     let selectedAnswer = -1;
     let startTime = null;
     let correctCount = 0;
-    let mathCorrect = 0;
-    let patternCorrect = 0;
-    let logicCorrect = 0;
-    let brainCorrect = 0;
+    let mathCorrect = 0;    // 行情
+    let patternCorrect = 0;  // 知识
+    let logicCorrect = 0;    // 逻辑
+    let brainCorrect = 0;    // 软件
     let shuffledQuestions = [];
-const LEADERBOARD_KEY = 'iq_leaderboard';
-const MY_ID_KEY = 'iq_my_id';
-let myId = localStorage.getItem(MY_ID_KEY);
-let playerName = localStorage.getItem('iq_player_name') || '';
+
+    const MY_ID_KEY = 'iq_my_id';
+    let myId = localStorage.getItem(MY_ID_KEY);
+    let playerName = localStorage.getItem('iq_player_name') || '';
 
     let questionTimeLeft = 10;
     let questionTimerInterval = null;
@@ -347,7 +352,6 @@ let playerName = localStorage.getItem('iq_player_name') || '';
     }
 
     function startTest() {
-        // If no player name, redirect to leaderboard page
         if (!playerName) {
             window.location.href = 'leaderboard.html';
             return;
@@ -372,7 +376,6 @@ let playerName = localStorage.getItem('iq_player_name') || '';
         setTimeout(updateTimer, 1000);
     }
 
-    // 每题10秒倒计时
     function updateQuestionTimer() {
         if (questionTimerInterval) clearInterval(questionTimerInterval);
         const timerEl = document.getElementById('questionTimer');
@@ -388,9 +391,8 @@ let playerName = localStorage.getItem('iq_player_name') || '';
             }
             if (questionTimeLeft <= 0) {
                 clearInterval(questionTimerInterval);
-                // 时间到，自动提交（视为错误）
                 if (selectedAnswer === -1) {
-                    selectOption(-1); // -1 表示超时
+                    selectOption(-1);
                 }
             }
         }, 1000);
@@ -405,11 +407,8 @@ let playerName = localStorage.getItem('iq_player_name') || '';
         const typeEl = document.getElementById('qType');
         typeEl.textContent = q.typeLabel;
         typeEl.className = 'question-type type-' + q.type;
-        
-        // 显示剩余时间（10秒倒计时）
         questionTimeLeft = 10;
         updateQuestionTimer();
-        
         document.getElementById('qText').textContent = q.question;
         const optionsEl = document.getElementById('options');
         const letters = ['A', 'B', 'C', 'D'];
@@ -431,16 +430,12 @@ let playerName = localStorage.getItem('iq_player_name') || '';
     }
 
     function selectOption(index) {
-        // 清除本题计时器
         if (questionTimerInterval) clearInterval(questionTimerInterval);
-        
         selectedAnswer = index;
         const q = shuffledQuestions[currentIndex];
-        
-        // 超时情况
         const isTimeout = index === -1;
         const isCorrect = isTimeout ? false : index === q.answer;
-        
+
         if (isCorrect) {
             correctCount++;
             if (q.type === 'math') mathCorrect++;
@@ -453,7 +448,7 @@ let playerName = localStorage.getItem('iq_player_name') || '';
             opt.classList.remove('selected');
             if (i === q.answer) opt.classList.add('correct');
             if (i === index && i !== q.answer) opt.classList.add('wrong');
-            if (isTimeout && i !== q.answer) opt.classList.add('wrong'); // 超时：正确答案保留绿色，其他标记红色
+            if (isTimeout && i !== q.answer) opt.classList.add('wrong');
             opt.style.pointerEvents = 'none';
         });
 
@@ -482,50 +477,69 @@ let playerName = localStorage.getItem('iq_player_name') || '';
         }
     }
 
+    // 保存到 Supabase（云端排行榜）
+    async function saveToSupabase(entry) {
+        try {
+            // 先查询是否已有该用户记录
+            const r = await fetch(SB_URL + '/rest/v1/leaderboard?id=eq.' + encodeURIComponent(entry.id) + '&select=id', {
+                headers: {
+                    'apikey': SB_KEY,
+                    'Authorization': 'Bearer ' + SB_KEY,
+                    'Prefer': 'count=none'
+                }
+            });
+            if (r.ok) {
+                const existing = await r.json();
+                if (existing && existing.length > 0) {
+                    // 已存在：更新
+                    await fetch(SB_URL + '/rest/v1/leaderboard?id=eq.' + encodeURIComponent(entry.id), {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SB_KEY,
+                            'Authorization': 'Bearer ' + SB_KEY,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(entry)
+                    });
+                } else {
+                    // 不存在：插入
+                    await fetch(SB_URL + '/rest/v1/leaderboard', {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SB_KEY,
+                            'Authorization': 'Bearer ' + SB_KEY,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(entry)
+                    });
+                }
+            }
+        } catch(e) {
+            console.warn('Supabase save failed:', e);
+        }
+    }
+
     function showResult() {
         document.getElementById('testScreen').classList.add('hidden');
         document.getElementById('resultScreen').classList.remove('hidden');
 
-        // Save to leaderboard
-        if (myId && playerName && startTime) {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const entry = {
-                id: myId,
-                name: playerName,
-                score: correctCount,
-                total: shuffledQuestions.length,
-                time: elapsed,
-                timestamp: Date.now()
-            };
-            let board = [];
-            try { board = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || '[]'); } catch(e) {}
-            const existIdx = board.findIndex(e => e.id === myId);
-            if (existIdx >= 0) { board[existIdx] = entry; } else { board.push(entry); }
-            board.sort((a,b) => parseFloat(a.time) - parseFloat(b.time));
-            board = board.slice(0, 50);
-            localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board));
-            const rank = board.findIndex(e => e.id === myId) + 1;
-            if (rank > 0) {
-                const rankDiv = document.createElement('div');
-                rankDiv.style.cssText = 'text-align:center;margin:16px 0 8px;';
-                const linkText = rank <= 10 ? '🏆 查看排行榜（第' + rank + '名）' : '🏆 查看排行榜';
-                rankDiv.innerHTML = '<a href="leaderboard.html" target="_self" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-radius:30px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(245,158,11,.4);">' + linkText + '</a>';
-                document.getElementById('resultScreen').querySelector('.card').appendChild(rankDiv);
-            }
-        }
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
         const mins = Math.floor(elapsed / 60);
         const secs = elapsed % 60;
         const accuracy = Math.round((correctCount / shuffledQuestions.length) * 100);
         const score = accuracy;
+
         document.getElementById('iqScore').textContent = score;
         document.getElementById('correctCount').textContent = correctCount;
-        document.getElementById('accuracy').textContent = Math.round((correctCount / shuffledQuestions.length) * 100) + '%';
+        document.getElementById('accuracy').textContent = accuracy + '%';
         document.getElementById('totalTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-        document.getElementById('logicScore').textContent = mathCorrect + '/' + shuffledQuestions.filter(q => q.type === 'math').length;
+        document.getElementById('mathScore').textContent = mathCorrect + '/' + shuffledQuestions.filter(q => q.type === 'math').length;
         document.getElementById('patternScore').textContent = patternCorrect + '/' + shuffledQuestions.filter(q => q.type === 'pattern').length;
-        document.getElementById('knowledgeScore').textContent = logicCorrect + '/' + shuffledQuestions.filter(q => q.type === 'logic').length;
-        document.getElementById('softwareScore').textContent = brainCorrect + '/' + shuffledQuestions.filter(q => q.type === 'brain').length;
+        document.getElementById('logicScore').textContent = logicCorrect + '/' + shuffledQuestions.filter(q => q.type === 'logic').length;
+        document.getElementById('brainScore').textContent = brainCorrect + '/' + shuffledQuestions.filter(q => q.type === 'brain').length;
+
         const rankEl = document.getElementById('resultRank');
         const msgEl = document.getElementById('resultMessage');
         if (score >= 100) {
@@ -540,6 +554,25 @@ let playerName = localStorage.getItem('iq_player_name') || '';
             rankEl.innerHTML = '💪 不合格不通过，需要努力！';
             rankEl.className = 'result-rank rank-average';
             msgEl.textContent = '加油！多练习几次，你会越来越好的！';
+        }
+
+        // 保存到云端排行榜
+        if (myId && playerName && startTime) {
+            const entry = {
+                id: myId,
+                name: playerName,
+                score: correctCount,
+                total: shuffledQuestions.length,
+                time: elapsed,
+                timestamp: Date.now()
+            };
+            saveToSupabase(entry);
+
+            // 排行榜入口
+            const rankDiv = document.createElement('div');
+            rankDiv.style.cssText = 'text-align:center;margin:16px 0 8px;';
+            rankDiv.innerHTML = '<a href="leaderboard.html" target="_self" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-radius:30px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(245,158,11,.4);">🏆 查看排行榜</a>';
+            document.getElementById('resultScreen').querySelector('.card').appendChild(rankDiv);
         }
     }
 
