@@ -128,9 +128,23 @@
             localStorage.setItem(MY_ID_KEY, myId);
         }
         // Store name and go to test
-        sessionStorage.setItem('iq_player_name', name);
-        sessionStorage.setItem('iq_player_id', myId);
+        localStorage.setItem('iq_player_name', name);
+        localStorage.setItem('iq_player_id', myId);
         window.location.href = 'index.html';
+    }
+
+    // If already logged in, show brief message then redirect
+    const savedName = localStorage.getItem('iq_player_name');
+    if (savedName) {
+        const nameInput = document.getElementById('nameInput');
+        nameInput.value = savedName;
+        nameInput.readOnly = true;
+        nameInput.style.opacity = '0.6';
+        const joinBtn = document.getElementById('joinBtn');
+        joinBtn.textContent = '继续挑战 →';
+        joinBtn.onclick = function() {
+            window.location.href = 'index.html';
+        };
     }
 
     renderList();
