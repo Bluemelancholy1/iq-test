@@ -90,11 +90,14 @@
 
     function renderList() {
         const list = document.getElementById('rankList');
+        if (!myId) { list.style.display = 'none'; return; }
         const top = getTop10();
         if (top.length === 0) {
             list.innerHTML = '<div class="empty">暂无记录</div>';
+            list.style.display = 'block';
             return;
         }
+        list.style.display = 'block';
         list.innerHTML = top.map((item, i) => {
             const isMe = item.id === myId;
             const rank = i + 1;
