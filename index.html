@@ -216,7 +216,7 @@
                     <div class="label">分钟</div>
                 </div>
             </div>
-            <button class="btn btn-primary" onclick="startTest()">开始挑战 <span>→</span></button>
+            <button class="btn btn-primary" onclick="location.href='leaderboard.html'">开始挑战 <span>→</span></button>
         </div>
         <div id="testScreen" class="hidden">
             <div class="progress-container">
@@ -355,19 +355,8 @@
 
     function startTest() {
         if (!playerName) {
-            // 没有名字时弹出输入框
-            const name = prompt('请输入你的名字：');
-            if (!name || name.trim().length < 2) {
-                alert('名字至少2个字符');
-                return;
-            }
-            playerName = name.trim();
-            localStorage.setItem('iq_player_name', playerName);
-            // 生成用户ID
-            if (!myId) {
-                myId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-                localStorage.setItem(MY_ID_KEY, myId);
-            }
+            window.location.href = 'leaderboard.html';
+            return;
         }
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('testScreen').classList.remove('hidden');
@@ -610,7 +599,12 @@
         document.getElementById('startScreen').classList.remove('hidden');
     }
 
-
+    // 页面加载时：如果有名字则自动开始测试（从排行榜过来）
+    (function init() {
+        if (playerName) {
+            startTest();
+        }
+    })();
     </script>
 </body>
 </html>
