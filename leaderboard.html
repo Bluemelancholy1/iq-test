@@ -107,19 +107,21 @@
         }
     }
 
-    // 根据错题数计算评分（错3题以上80分以下）
-    function getRating(score, total) {
-        const wrong = total - score;
-        let finalScore;
-        if (wrong >= 3) {
-            finalScore = Math.min(79, Math.round((score / total) * 100));
-        } else {
-            finalScore = Math.round((score / total) * 100);
-        }
+    // 根据时间和正确率定称号
+    function getRating(score, total, time) {
+        const pct = Math.round((score / total) * 100);
         
-        if (finalScore >= 90) return { score: finalScore, title: '高高手' };
-        if (finalScore >= 80) return { score: finalScore, title: '良好' };
-        if (finalScore >= 60) return { score: finalScore, title: '不行再努力' };
+        // 90-99分正常显示，其他按原规则
+        let finalScore = pct;
+        
+        // 根据时间和正确率定称号
+        if (pct === 100 && time <= 50) return { score: finalScore, title: '高高高手' };
+        if (pct === 100 && time <= 60) return { score: finalScore, title: '高手' };
+        if (pct === 100) return { score: finalScore, title: '正常' };
+        if (pct >= 90) return { score: finalScore, title: '正常' };
+        if (time >= 80) return { score: finalScore, title: '不行再努力' };
+        if (pct >= 80) return { score: finalScore, title: '良好' };
+        if (pct >= 60) return { score: finalScore, title: '不行再努力' };
         return { score: finalScore, title: '垃圾' };
     }
 
@@ -147,7 +149,7 @@
         list.innerHTML = sorted.map((item, i) => {
             const r = i + 1;
             const isMe = item.id === myId;
-            const rating = getRating(item.score, item.total);
+            const rating = getRating(item.score, item.total, item.time);
             return '<div class="rank-item' + (isMe ? ' my-rank' : '') + (r <= 3 ? ' top' + r : '') + '">' +
                 '<div class="rank-num">' + getMedal(r) + '</div>' +
                 '<div class="rank-info">' +
