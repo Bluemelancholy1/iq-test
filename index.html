@@ -186,7 +186,7 @@
                 <div class="feature-item">
                     <div class="feature-icon">📚</div>
                     <div class="feature-name">知识</div>
-                    <div class="feature-count">9 道题目</div>
+                    <div class="feature-count">10 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🧩</div>
@@ -201,11 +201,11 @@
             </div>
             <div class="stats-preview">
                 <div class="preview-stat">
-                    <div class="value">20</div>
+                    <div class="value">21</div>
                     <div class="label">总题库</div>
                 </div>
                 <div class="preview-stat">
-                    <div class="value">20</div>
+                    <div class="value">21</div>
                     <div class="label">每次挑战</div>
                 </div>
                 <div class="preview-stat">
@@ -295,6 +295,7 @@
         { type: 'pattern', typeLabel: '知识', question: '我们平台出金时间是几点到几点？', options: ['9点—5点', '9点—11点', '9点—23点', '9点—17点'], answer: 3, explanation: '我们平台出金时间是9点到17点！' },
         { type: 'pattern', typeLabel: '知识', question: '我们平台入金时间是几点到几点？', options: ['9点—5点', '9点—23点', '9点—11点', '9点—17点'], answer: 1, explanation: '我们平台入金时间是9点到23点！' },
         { type: 'pattern', typeLabel: '知识', question: '恒指1手隔夜需要多少保证金？', options: ['18000港币', '1800港币', '1000美金', '以上都不可以'], answer: 3, explanation: '恒指1手隔夜保证金不是以上选项，正确答案是以上都不可以！' },
+        { type: 'pattern', typeLabel: '知识', question: '美黄金合约几个月一换？', options: ['1个月', '3个月', '2个月', '4个月'], answer: 2, explanation: '美黄金合约每2个月更换一次！' },
         { type: 'pattern', typeLabel: '知识', question: '恒生指数晚上停盘时间是什么时候？', options: ['3:20', '3:00', '2:50', '3:30'], answer: 1, explanation: '恒生指数晚上3:00停盘收盘！' },
         { type: 'logic', typeLabel: '逻辑', question: '我们的软件叫什么名字？', options: ['金告通', '金浩通', '金皓通', '金号通'], answer: 1, explanation: '我们的软件叫金浩通！' },
         { type: 'logic', typeLabel: '逻辑', question: '美黄金往上波动10美金赚多少钱？', options: ['100', '10000', '1000', '10'], answer: 2, explanation: '美黄金每手100盎司，波动1美金=100美元，10美金=1000美元！' },
@@ -333,7 +334,7 @@
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('testScreen').classList.remove('hidden');
         document.getElementById('resultScreen').classList.add('hidden');
-        shuffledQuestions = shuffleArray(questions).slice(0, 20);
+        shuffledQuestions = shuffleArray(questions).slice(0, 21);
         document.getElementById('totalQ').textContent = shuffledQuestions.length;
         startTime = Date.now();
         updateTimer();
