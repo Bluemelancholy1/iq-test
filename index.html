@@ -332,7 +332,7 @@
 const LEADERBOARD_KEY = 'iq_leaderboard';
 const MY_ID_KEY = 'iq_my_id';
 let myId = localStorage.getItem(MY_ID_KEY);
-let playerName = sessionStorage.getItem('iq_player_name') || '';
+let playerName = localStorage.getItem('iq_player_name') || '';
 
     let questionTimeLeft = 10;
     let questionTimerInterval = null;
