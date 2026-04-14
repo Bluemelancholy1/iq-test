@@ -181,31 +181,31 @@
                 <div class="feature-item">
                     <div class="feature-icon">📈</div>
                     <div class="feature-name">行情</div>
-                    <div class="feature-count">3 道题目</div>
+                    <div class="feature-count">1 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">📚</div>
                     <div class="feature-name">知识</div>
-                    <div class="feature-count">3 道题目</div>
+                    <div class="feature-count">1 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🧩</div>
                     <div class="feature-name">逻辑</div>
-                    <div class="feature-count">3 道题目</div>
+                    <div class="feature-count">1 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">💻</div>
                     <div class="feature-name">软件</div>
-                    <div class="feature-count">7 道题目</div>
+                    <div class="feature-count">6 道题目</div>
                 </div>
             </div>
             <div class="stats-preview">
                 <div class="preview-stat">
-                    <div class="value">16</div>
+                    <div class="value">9</div>
                     <div class="label">总题库</div>
                 </div>
                 <div class="preview-stat">
-                    <div class="value">16</div>
+                    <div class="value">9</div>
                     <div class="label">每次挑战</div>
                 </div>
                 <div class="preview-stat">
@@ -287,19 +287,12 @@
     <script>
     const questions = [
         { type: 'math', typeLabel: '行情', question: '我们是什么平台？', options: ['大粤期货', '远大期货', '中阳期货', '大奥期货'], answer: 0, explanation: '我们的平台是大粤期货！' },
-        { type: 'math', typeLabel: '行情', question: '下列哪个是期货的主要特征？', options: ['实物交割', '杠杆交易', '固定收益', '保本理财'], answer: 1, explanation: '期货具有杠杆交易特征，可以用较小资金撬动大额合约！' },
-        { type: 'math', typeLabel: '行情', question: '期货合约到期时应该如何处理？', options: ['自动续期', '手动平仓或交割', '资金自动转出', '系统自动延期'], answer: 1, explanation: '期货到期前需要手动平仓或进行实物/现金交割！' },
         { type: 'pattern', typeLabel: '知识', question: '我们的盘面叫什么？', options: ['金浩盘面', '智星盘面', '中阳盘面', '远大盘面'], answer: 1, explanation: '我们的盘面是智星盘面！' },
-        { type: 'pattern', typeLabel: '知识', question: '以下哪个不是我们的服务产品？', options: ['黄金延期', '原油期货', '股指期权', '国债逆回购'], answer: 3, explanation: '国债逆回购不是我们的主要服务产品！' },
-        { type: 'pattern', typeLabel: '知识', question: '期货交易时间的特点是？', options: ['24小时交易', '工作日盘中交易', '随时可交易', '仅周末开市'], answer: 1, explanation: '期货交易有固定的开市时间，通常是工作日的交易时段。' },
         { type: 'logic', typeLabel: '逻辑', question: '我们的软件叫什么名字？', options: ['大粤通', '智星通', '金浩通', '中阳通'], answer: 2, explanation: '我们的软件叫金浩通！' },
-        { type: 'logic', typeLabel: '逻辑', question: '如果行情上涨10%，杠杆为10倍，收益是多少？', options: ['10%', '100%', '1%', '50%'], answer: 1, explanation: '杠杆10倍，行情涨10%，收益 = 10% × 10 = 100%！' },
         { type: 'brain', typeLabel: '软件', question: '行情端软件怎么下单更快？', options: ['设置里开启快捷下单', '点击合约直接市价成交', '设置下单确认不提示', '使用画线下单功能'], answer: 2, explanation: '设置下单确认不提示，可以大幅提升下单速度！' },
         { type: 'brain', typeLabel: '软件', question: '手机软件行情怎么出入金？', options: ['右上角设置银期转账', '首页点击充值按钮', '我的-钱包-提现', '联系在线客服'], answer: 0, explanation: '正确做法是在手机软件右上角设置中找到银期转账！' },
         { type: 'brain', typeLabel: '软件', question: '客户端行情软件怎么出入金？', options: ['右上角账户充值提现', '左下角资金管理入口', '设置-账户-转账', '联系客服人工处理'], answer: 0, explanation: '正确做法是在软件右上角找到账户，点击充值或提现！' },
         { type: 'brain', typeLabel: '软件', question: '我们软件行情怎么分屏？', options: ['主图中右键选择多周期分列', '在菜单栏点击分屏按钮', '快捷键Ctrl+Shift+S', '设置中开启多窗口模式'], answer: 0, explanation: '正确做法是在主图中右键，选择多周期分列！' },
-        { type: 'brain', typeLabel: '软件', question: '如何设置行情K线提醒？', options: ['我的-设置-提醒', '右上角菜单-提醒', '行情详情页点击闹钟图标', '以上都可以'], answer: 3, explanation: '可以在多个入口设置K线提醒，找到适合自己的方式即可！' },
-        { type: 'brain', typeLabel: '软件', question: '查看历史行情数据应该在哪里？', options: ['首页推荐', '自选-历史K线', '行情-更多-历史数据', '设置-数据'], answer: 2, explanation: '在行情页面点击更多，选择历史数据即可查看。' },
         { type: 'brain', typeLabel: '软件', question: '行情端止盈止损开仓在哪？', options: ['首页左上角菜单按钮', '底部导航栏交易入口', '交易界面右上方盾牌图标', '我的页面设置中'], answer: 2, explanation: '在交易界面右上方找到盾牌图标，点击即可设置止盈止损！' },
         { type: 'brain', typeLabel: '软件', question: '止损开仓在哪？', options: ['交易界面右上方盾牌图标', '首页左上角菜单按钮', '在左下方打钩', '我的页面设置中'], answer: 2, explanation: '止损开仓需要在左下方打钩设置！' }
     ];
