@@ -133,13 +133,17 @@
             return;
         }
 
-        // 去重：同 id 保留最优（得分高或用时短）
+        // 去重：同 id 保留最优（得分高优先，同分则用时短）
         const best = {};
         entries.forEach(e => {
             if (!best[e.id] || e.score > best[e.id].score ||
                (e.score === best[e.id].score && e.time < best[e.id].time)) best[e.id] = e;
         });
-        const sorted = Object.values(best).sort((a, b) => a.time - b.time).slice(0, 20);
+        // 排序：先按得分降序，同分按用时升序
+        const sorted = Object.values(best).sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score; // 得分高的在前
+            return a.time - b.time; // 同分则用时短的在前
+        }).slice(0, 20);
 
         if (sorted.length === 0) {
             list.innerHTML = '<div class="empty">暂无记录</div>';
