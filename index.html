@@ -598,6 +598,14 @@
         document.getElementById('resultScreen').classList.add('hidden');
         document.getElementById('startScreen').classList.remove('hidden');
     }
+
+    // 页面加载时：如果有名字则自动开始测试，否则显示开始界面
+    (function init() {
+        if (playerName) {
+            // 从排行榜页面过来，自动开始测试
+            startTest();
+        }
+    })();
     </script>
 </body>
 </html>
