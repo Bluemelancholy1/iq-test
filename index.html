@@ -161,6 +161,8 @@
         <div class="bg-grid"></div>
     </div>
     <div class="container">
+<a href="leaderboard.html" id="topbarRank" target="_self" style="position:fixed;top:16px;right:16px;z-index:100;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 12px rgba(245,158,11,.4);display:inline-flex;align-items:center;gap:6px;">&#x1F3C6; 排行榜</a>
+
         <div class="header">
             <div class="logo-wrap">
                 <div class="logo-icon">🧠</div>
@@ -327,6 +329,11 @@
     let logicCorrect = 0;
     let brainCorrect = 0;
     let shuffledQuestions = [];
+const LEADERBOARD_KEY = 'iq_leaderboard';
+const MY_ID_KEY = 'iq_my_id';
+let myId = localStorage.getItem(MY_ID_KEY);
+let playerName = sessionStorage.getItem('iq_player_name') || '';
+
     let questionTimeLeft = 10;
     let questionTimerInterval = null;
 
@@ -340,6 +347,11 @@
     }
 
     function startTest() {
+        // If no player name, redirect to leaderboard page
+        if (!playerName) {
+            window.location.href = 'leaderboard.html';
+            return;
+        }
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('testScreen').classList.remove('hidden');
         document.getElementById('resultScreen').classList.add('hidden');
@@ -473,6 +485,34 @@
     function showResult() {
         document.getElementById('testScreen').classList.add('hidden');
         document.getElementById('resultScreen').classList.remove('hidden');
+
+        // Save to leaderboard
+        if (myId && playerName && startTime) {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const entry = {
+                id: myId,
+                name: playerName,
+                score: correctCount,
+                total: shuffledQuestions.length,
+                time: elapsed,
+                timestamp: Date.now()
+            };
+            let board = [];
+            try { board = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || '[]'); } catch(e) {}
+            const existIdx = board.findIndex(e => e.id === myId);
+            if (existIdx >= 0) { board[existIdx] = entry; } else { board.push(entry); }
+            board.sort((a,b) => parseFloat(a.time) - parseFloat(b.time));
+            board = board.slice(0, 50);
+            localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board));
+            const rank = board.findIndex(e => e.id === myId) + 1;
+            if (rank > 0) {
+                const rankDiv = document.createElement('div');
+                rankDiv.style.cssText = 'text-align:center;margin:16px 0 8px;';
+                const linkText = rank <= 10 ? '🏆 查看排行榜（第' + rank + '名）' : '🏆 查看排行榜';
+                rankDiv.innerHTML = '<a href="leaderboard.html" target="_self" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-radius:30px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(245,158,11,.4);">' + linkText + '</a>';
+                document.getElementById('resultScreen').querySelector('.card').appendChild(rankDiv);
+            }
+        }
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
         const mins = Math.floor(elapsed / 60);
         const secs = elapsed % 60;
@@ -506,6 +546,8 @@
     function restartTest() {
         currentIndex = 0;
         correctCount = 0;
+        myId = null;
+        localStorage.removeItem(MY_ID_KEY);
         mathCorrect = 0;
         patternCorrect = 0;
         logicCorrect = 0;
