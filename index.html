@@ -66,23 +66,23 @@
         .progress-fill::after { content: ''; position: absolute; right: 0; top: -2px; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent); }
         .card { background: var(--bg-card); border-radius: 24px; border: 1px solid var(--border); padding: 36px; margin-bottom: 24px; position: relative; overflow: hidden; }
         .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); }
-        .start-screen { text-align: center; padding: 48px 36px 52px; }
-        .start-hero { position: relative; margin-bottom: 36px; }
-        .hero-icon { width: 100px; height: 100px; margin: 0 auto 24px; background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(168,85,247,0.15)); border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; animation: pulse-glow 3s ease-in-out infinite; }
+        .start-screen { text-align: center; padding: 32px 28px 40px; }
+        .start-hero { position: relative; margin-bottom: 24px; }
+        .hero-icon { width: 70px; height: 70px; margin: 0 auto 16px; background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(168,85,247,0.15)); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; position: relative; animation: pulse-glow 3s ease-in-out infinite; }
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.2), 0 20px 40px rgba(0,0,0,0.3); }
             50% { box-shadow: 0 0 0 20px rgba(0,255,136,0), 0 20px 40px rgba(0,0,0,0.3); }
         }
         .hero-icon::after { content: ''; position: absolute; inset: -2px; border-radius: 30px; background: linear-gradient(135deg, var(--accent), var(--accent3)); z-index: -1; opacity: 0.5; }
-        .start-title { font-size: 26px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
-        .start-desc { color: var(--text-dim); font-size: 15px; line-height: 1.8; margin-bottom: 32px; }
-        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 36px; }
-        .feature-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: left; transition: all 0.3s ease; }
+        .start-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .start-desc { color: var(--text-dim); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .feature-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: left; transition: all 0.3s ease; }
         .feature-item:hover { background: rgba(255,255,255,0.04); border-color: var(--border-hover); transform: translateY(-2px); }
-        .feature-icon { font-size: 20px; margin-bottom: 8px; }
-        .feature-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .feature-count { font-size: 12px; color: var(--text-muted); }
-        .stats-preview { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 16px; }
+        .feature-icon { font-size: 18px; margin-bottom: 4px; }
+        .feature-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .feature-count { font-size: 11px; color: var(--text-muted); }
+        .stats-preview { display: flex; justify-content: center; gap: 32px; margin-bottom: 24px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 12px; }
         .preview-stat { text-align: center; }
         .preview-stat .value { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .preview-stat .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
@@ -181,31 +181,31 @@
                 <div class="feature-item">
                     <div class="feature-icon">📈</div>
                     <div class="feature-name">行情</div>
-                    <div class="feature-count">5 道题目</div>
+                    <div class="feature-count">1 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">📚</div>
                     <div class="feature-name">知识</div>
-                    <div class="feature-count">5 道题目</div>
+                    <div class="feature-count">1 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🧩</div>
                     <div class="feature-name">逻辑</div>
-                    <div class="feature-count">5 道题目</div>
+                    <div class="feature-count">1 道题目</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">💻</div>
                     <div class="feature-name">软件</div>
-                    <div class="feature-count">5 道题目</div>
+                    <div class="feature-count">3 道题目</div>
                 </div>
             </div>
             <div class="stats-preview">
                 <div class="preview-stat">
-                    <div class="value">4</div>
+                    <div class="value">6</div>
                     <div class="label">总题库</div>
                 </div>
                 <div class="preview-stat">
-                    <div class="value">4</div>
+                    <div class="value">6</div>
                     <div class="label">每次挑战</div>
                 </div>
                 <div class="preview-stat">
