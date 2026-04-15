@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全方位测试排行榜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-dark: #08080c;
+            --bg-card: #0f0f15;
+            --accent: #00ff88;
+            --accent2: #ff6b35;
+            --accent3: #a855f7;
+            --accent4: #3b82f6;
+            --accent5: #ec4899;
+            --accent6: #eab308;
+            --text: #e8e8ec;
+            --text-dim: #6b6b7a;
+            --text-muted: #4a4a5a;
+            --border: rgba(255,255,255,0.06);
+        }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .bg-effects {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .bg-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; animation: float 25s ease-in-out infinite; }
+        .orb-1 { width: 600px; height: 600px; top: -200px; left: -150px; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); }
+        .orb-2 { width: 500px; height: 500px; bottom: -200px; right: -150px; background: radial-gradient(circle, var(--accent3) 0%, transparent 70%); animation-delay: -12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, -30px); } }
+        .bg-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .container { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 20px 16px 60px; }
+        .header { text-align: center; margin-bottom: 24px; padding-top: 16px; }
+        .logo-wrap { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent4), var(--accent3)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .logo { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, var(--accent4), #6366f1, var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--text-dim); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 500; }
+        .card { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); }
+        .stats-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 20px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent4), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px 24px; border: none; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent4), #6366f1); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59,130,246,0.3); }
+        
+        /* Leaderboard */
+        .leaderboard-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
+        .leaderboard-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; transition: all 0.25s; }
+        .leaderboard-item:hover { background: rgba(255,255,255,0.04); transform: translateX(4px); }
+        .leaderboard-item.top-1 { border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.05); }
+        .leaderboard-item.top-2 { border-color: rgba(192,192,192,0.3); background: rgba(192,192,192,0.05); }
+        .leaderboard-item.top-3 { border-color: rgba(205,127,50,0.3); background: rgba(205,127,50,0.05); }
+        .rank { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
+        .top-1 .rank { background: linear-gradient(135deg, #ffd700, #ffb700); color: #000; }
+        .top-2 .rank { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #000; }
+        .top-3 .rank { background: linear-gradient(135deg, #cd7f32, #b87333); color: #000; }
+        .user-info { flex: 1; min-width: 0; }
+        .user-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .user-scores { display: flex; gap: 6px; flex-wrap: wrap; }
+        .mini-score { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.05); }
+        .mini-score.world { color: var(--accent); }
+        .mini-score.consume { color: var(--accent2); }
+        .mini-score.life { color: var(--accent3); }
+        .mini-score.work { color: var(--accent4); }
+        .mini-score.social { color: var(--accent5); }
+        .mini-score.family { color: var(--accent6); }
+        .total-score { font-size: 18px; font-weight: 700; color: var(--accent4); text-align: right; min-width: 60px; }
+        .total-score::after { content: '%'; font-size: 12px; opacity: 0.7; }
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+        .loading { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        .loading::after { content: '...'; animation: pulse 1.5s infinite; }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="bg-grid"></div>
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo-wrap">
+                <div class="logo-icon">🏆</div>
+                <div class="logo">排行榜</div>
+            </div>
+            <div class="subtitle">Assessment Leaderboard</div>
+        </div>
+        
+        <div class="card">
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCount">-</div>
+                    <div class="stat-label">参与人数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avgScore">-</div>
+                    <div class="stat-label">平均得分</div>
+                </div>
+            </div>
+            
+            <a href="assessment.html" style="text-decoration:none;">
+                <button class="btn btn-primary">开始测试 →</button>
+            </a>
+        </div>
+        
+        <div class="card">
+            <div class="leaderboard-title">📊 排名榜</div>
+            <div class="leaderboard-list" id="leaderboardList">
+                <div class="loading">加载中</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const SUPABASE_URL = 'https://jufodimlnwkzxktrunjx.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_sdXOBqMrwiQPHib0NW3zPg_0ihQwwHc';
+        
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/assessment_results?select=*&order=total_score.desc&limit=50`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.length === 0) {
+                    document.getElementById('leaderboardList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🎯</div>
+                            <div>暂无数据，快来成为第一个参与者！</div>
+                        </div>
+                    `;
+                    document.getElementById('totalCount').textContent = '0';
+                    document.getElementById('avgScore').textContent = '-';
+                    return;
+                }
+                
+                // 统计
+                document.getElementById('totalCount').textContent = data.length;
+                const avgTotal = Math.round(data.reduce((sum, item) => sum + item.total_score, 0) / data.length);
+                document.getElementById('avgScore').textContent = avgTotal + '%';
+                
+                // 渲染排行榜
+                const html = data.map((item, index) => {
+                    const rank = index + 1;
+                    const topClass = rank <= 3 ? `top-${rank}` : '';
+                    
+                    return `
+                        <div class="leaderboard-item ${topClass}">
+                            <div class="rank">${rank}</div>
+                            <div class="user-info">
+                                <div class="user-name">${item.name}</div>
+                                <div class="user-scores">
+                                    <span class="mini-score world">🌱${Math.round(item.world_score / 5 * 100 / 3)}%</span>
+                                    <span class="mini-score consume">💰${Math.round(item.consume_score / 5 * 100 / 3)}%</span>
+                                    <span class="mini-score life">🏠${Math.round(item.life_score / 5 * 100 / 3)}%</span>
+                                    <span class="mini-score work">💼${Math.round(item.work_score / 5 * 100 / 3)}%</span>
+                                    <span class="mini-score social">👥${Math.round(item.social_score / 5 * 100 / 3)}%</span>
+                                    <span class="mini-score family">❤️${Math.round(item.family_score / 5 * 100 / 3)}%</span>
+                                </div>
+                            </div>
+                            <div class="total-score">${item.total_score}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('leaderboardList').innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                document.getElementById('leaderboardList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <div>加载失败，请稍后重试</div>
+                    </div>
+                `;
+            }
+        }
+        
+        loadLeaderboard();
+    </script>
+</body>
+</html>
