@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全方位测试</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-dark: #08080c;
+            --bg-card: #0f0f15;
+            --accent: #00ff88;
+            --accent2: #ff6b35;
+            --accent3: #a855f7;
+            --accent4: #3b82f6;
+            --accent5: #ec4899;
+            --accent6: #eab308;
+            --text: #e8e8ec;
+            --text-dim: #6b6b7a;
+            --text-muted: #4a4a5a;
+            --border: rgba(255,255,255,0.06);
+        }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .bg-effects {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .bg-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; animation: float 25s ease-in-out infinite; }
+        .orb-1 { width: 600px; height: 600px; top: -200px; left: -150px; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); }
+        .orb-2 { width: 500px; height: 500px; bottom: -200px; right: -150px; background: radial-gradient(circle, var(--accent3) 0%, transparent 70%); animation-delay: -12s; }
+        .orb-3 { width: 400px; height: 400px; top: 40%; left: 60%; background: radial-gradient(circle, var(--accent4) 0%, transparent 70%); opacity: 0.2; animation-delay: -6s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, -30px); } }
+        .bg-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .container { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 20px 16px 60px; }
+        .header { text-align: center; margin-bottom: 24px; padding-top: 16px; }
+        .logo-wrap { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent4), var(--accent3)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 6px 20px rgba(59,130,246,0.25); }
+        .logo { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, var(--accent4), #6366f1, var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        .subtitle { color: var(--text-dim); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 500; }
+        
+        /* Start Screen */
+        .start-screen { text-align: center; padding: 20px 16px 24px; }
+        .start-hero { margin-bottom: 20px; }
+        .hero-icon { width: 80px; height: 80px; margin: 0 auto 16px; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(168,85,247,0.15)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; }
+        .start-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .start-desc { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+        .dimension-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+        .dimension-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 14px 10px; text-align: center; transition: all 0.3s ease; }
+        .dimension-item:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+        .dimension-icon { font-size: 20px; margin-bottom: 6px; }
+        .dimension-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+        .dimension-count { font-size: 10px; color: var(--text-muted); }
+        .stats-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 24px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 12px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent4), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 18px 24px; border: none; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent4), #6366f1); color: #fff; font-weight: 700; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(59,130,246,0.35); }
+        
+        /* Question Screen */
+        .question-screen { display: none; }
+        .progress-container { margin-bottom: 20px; }
+        .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--text-dim); }
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent4), var(--accent3)); border-radius: 2px; transition: width 0.5s ease; }
+        .dimension-tabs { display: flex; gap: 4px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+        .dim-tab { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.25s; border: 1px solid var(--border); background: rgba(255,255,255,0.02); color: var(--text-dim); }
+        .dim-tab.active { border-color: transparent; color: #fff; }
+        .dim-tab[data-type="world"].active { background: rgba(0,255,136,0.15); }
+        .dim-tab[data-type="consume"].active { background: rgba(255,107,53,0.15); }
+        .dim-tab[data-type="life"].active { background: rgba(168,85,247,0.15); }
+        .dim-tab[data-type="work"].active { background: rgba(59,130,246,0.15); }
+        .dim-tab[data-type="social"].active { background: rgba(236,72,153,0.15); }
+        .dim-tab[data-type="family"].active { background: rgba(234,179,8,0.15); }
+        .card { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); padding: 28px 24px; margin-bottom: 16px; position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); }
+        .question-number { position: absolute; top: 12px; right: 20px; font-size: 80px; font-weight: 900; opacity: 0.03; color: var(--accent4); line-height: 1; }
+        .question-type { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .type-world { background: rgba(0,255,136,0.12); color: var(--accent); }
+        .type-consume { background: rgba(255,107,53,0.12); color: var(--accent2); }
+        .type-life { background: rgba(168,85,247,0.12); color: var(--accent3); }
+        .type-work { background: rgba(59,130,246,0.12); color: var(--accent4); }
+        .type-social { background: rgba(236,72,153,0.12); color: var(--accent5); }
+        .type-family { background: rgba(234,179,8,0.12); color: var(--accent6); }
+        .question-text { font-size: 17px; font-weight: 500; line-height: 1.75; margin-bottom: 20px; color: var(--text); }
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        .option { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.25s ease; font-size: 14px; }
+        .option:hover:not(.disabled) { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.25); transform: translateX(4px); }
+        .option.disabled { cursor: default; }
+        .option.selected { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.4); }
+        .option-label { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; transition: all 0.25s; margin-top: 1px; }
+        .option.selected .option-label { background: rgba(59,130,246,0.25); color: var(--accent4); }
+        .option-text { flex: 1; line-height: 1.6; padding-top: 3px; }
+        .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(59,130,246,0.06); border-radius: 12px; border: 1px solid rgba(59,130,246,0.15); font-size: 13px; line-height: 1.75; color: var(--text-dim); }
+        .explanation strong { color: var(--accent4); }
+        .btn-next { display: none; margin-top: 16px; }
+        .btn-next.show { display: flex; }
+        
+        /* Result Screen */
+        .result-screen { display: none; }
+        .result-card { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
+        .result-header { text-align: center; margin-bottom: 24px; }
+        .result-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .result-subtitle { color: var(--text-dim); font-size: 13px; }
+        .score-overview { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .score-item { text-align: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 12px; min-width: 90px; }
+        .score-item .score-icon { font-size: 18px; margin-bottom: 4px; }
+        .score-item .score-value { font-size: 20px; font-weight: 700; }
+        .score-item .score-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        .score-item[data-type="world"] .score-value { color: var(--accent); }
+        .score-item[data-type="consume"] .score-value { color: var(--accent2); }
+        .score-item[data-type="life"] .score-value { color: var(--accent3); }
+        .score-item[data-type="work"] .score-value { color: var(--accent4); }
+        .score-item[data-type="social"] .score-value { color: var(--accent5); }
+        .score-item[data-type="family"] .score-value { color: var(--accent6); }
+        .result-section { margin-bottom: 20px; }
+        .result-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .result-section-content { font-size: 13px; line-height: 1.8; color: var(--text-dim); }
+        .result-section-content strong { color: var(--text); }
+        .name-input-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .name-input-label { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
+        .name-input { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.03); color: var(--text); font-size: 15px; font-family: inherit; outline: none; transition: all 0.25s; }
+        .name-input:focus { border-color: var(--accent4); background: rgba(59,130,246,0.05); }
+        .name-input::placeholder { color: var(--text-muted); }
+        .submit-btn { margin-top: 12px; }
+        
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease; }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="bg-grid"></div>
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo-wrap">
+                <div class="logo-icon">🌏</div>
+                <div class="logo">全方位测试</div>
+            </div>
+            <div class="subtitle">Worldview · Values · Life</div>
+        </div>
+        
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <div class="card">
+                <div class="start-hero">
+                    <div class="hero-icon">🧭</div>
+                    <div class="start-title">探索你的价值观</div>
+                    <div class="start-desc">6个维度 × 30道精选题目<br>深度了解你的世界观、消费观、生活态度</div>
+                </div>
+                
+                <div class="dimension-grid">
+                    <div class="dimension-item">
+                        <div class="dimension-icon">🌱</div>
+                        <div class="dimension-name">世界观</div>
+                        <div class="dimension-count">5题</div>
+                    </div>
+                    <div class="dimension-item">
+                        <div class="dimension-icon">💰</div>
+                        <div class="dimension-name">消费观</div>
+                        <div class="dimension-count">5题</div>
+                    </div>
+                    <div class="dimension-item">
+                        <div class="dimension-icon">🏠</div>
+                        <div class="dimension-name">生活观</div>
+                        <div class="dimension-count">5题</div>
+                    </div>
+                    <div class="dimension-item">
+                        <div class="dimension-icon">💼</div>
+                        <div class="dimension-name">工作观</div>
+                        <div class="dimension-count">5题</div>
+                    </div>
+                    <div class="dimension-item">
+                        <div class="dimension-icon">👥</div>
+                        <div class="dimension-name">社会观</div>
+                        <div class="dimension-count">5题</div>
+                    </div>
+                    <div class="dimension-item">
+                        <div class="dimension-icon">❤️</div>
+                        <div class="dimension-name">家庭观</div>
+                        <div class="dimension-count">5题</div>
+                    </div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">30</div>
+                        <div class="stat-label">总题数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">维度</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">~8</div>
+                        <div class="stat-label">分钟</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="startTest()">开始测试 →</button>
+                <div style="text-align:center;margin-top:12px;">
+                    <a href="assessment-leaderboard.html" style="color:var(--text-dim);font-size:12px;text-decoration:none;">查看排行榜 →</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question Screen -->
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">第 1 题 / 共 30 题</span>
+                    <span id="dimensionProgress">世界观 1/5</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 3.33%"></div>
+                </div>
+            </div>
+            
+            <div class="dimension-tabs" id="dimensionTabs"></div>
+            
+            <div class="card" id="questionCard">
+                <div class="question-number" id="questionNum">1</div>
+                <div class="question-type" id="questionType">🌱 世界观</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+            
+            <button class="btn btn-primary btn-next" id="nextBtn" onclick="nextQuestion()">下一题 →</button>
+        </div>
+        
+        <!-- Result Screen -->
+        <div class="result-screen" id="resultScreen">
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">测试完成</div>
+                    <div class="result-subtitle">以下是你的价值观分析报告</div>
+                </div>
+                <div class="score-overview" id="scoreOverview"></div>
+                <div id="resultDetails"></div>
+                
+                <div class="name-input-section">
+                    <div class="name-input-label">输入名字保存到排行榜：</div>
+                    <input type="text" class="name-input" id="nameInput" placeholder="请输入你的名字" maxlength="20">
+                    <button class="btn btn-primary submit-btn" onclick="submitResult()">提交结果 →</button>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:12px;">
+                <a href="assessment-leaderboard.html" style="color:var(--text-dim);font-size:12px;text-decoration:none;">查看排行榜 →</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 题库
+        const questions = {
+            world: [
+                {
+                    q: "你认为，一个人的命运主要取决于什么？",
+                    options: [
+                        "自身努力和选择，环境只是配角",
+                        "时代和运气更重要，努力要顺势而为",
+                        "家庭出身基本决定了人生上限",
+                        "一切随缘，想太多没用"
+                    ],
+                    types: ["自主型", "顺势型", "结构型", "随缘型"],
+                    explanation: "这反映了你对命运归因的基本看法：是相信个人能动性，还是更看重外部环境？"
+                },
+                {
+                    q: "面对社会上的贫富差距，你的态度是？",
+                    options: [
+                        "这是正常现象，差距是努力程度不同的结果",
+                        "差距可以存在，但不能太大，需要调节",
+                        "差距过大是制度问题，需要根本性改变",
+                        "无所谓，只要自己过得好就行"
+                    ],
+                    types: ["精英主义", "温和改良", "激进改革", "个人主义"],
+                    explanation: "这体现了你对社会公平的基本立场：是接受现状、温和改革、还是追求平等？"
+                },
+                {
+                    q: "你更倾向于相信哪句话？",
+                    options: [
+                        "天道酬勤，付出总有回报",
+                        "谋事在人，成事在天",
+                        "人算不如天算",
+                        "机会是留给有准备的人的"
+                    ],
+                    types: ["努力论", "平衡论", "宿命论", "机会论"],
+                    explanation: "这反映了你对努力与结果关系的核心信念。"
+                },
+                {
+                    q: "如果你看到有人成功，你的第一反应是？",
+                    options: [
+                        "他一定付出了很多努力",
+                        "他运气真好，赶上了好时候",
+                        "他家庭背景应该不错",
+                        "他有什么我不知道的方法或资源"
+                    ],
+                    types: ["归因努力", "归因运气", "归因背景", "归因资源"],
+                    explanation: "你如何看待他人的成功，反映了你理解世界的基本框架。"
+                },
+                {
+                    q: "你认为人生的意义是什么？",
+                    options: [
+                        "实现自我价值，成为更好的自己",
+                        "为社会做贡献，让世界变好一点",
+                        "过好自己的生活，照顾好家人",
+                        "人生没有固定意义，自己定义就好"
+                    ],
+                    types: ["自我实现", "社会贡献", "家庭责任", "存在主义"],
+                    explanation: "这是价值观的核心问题：你追求的是什么类型的人生意义？"
+                }
+            ],
+            consume: [
+                {
+                    q: "看中一件很喜欢但超出预算的衣服，你会？",
+                    options: [
+                        "咬咬牙买下来，开心最重要",
+                        "找类似的平替款，存钱更重要",
+                        "等打折再买，耐心等待",
+                        "根本不会超出预算，收入早就规划好了"
+                    ],
+                    types: ["即时满足", "理性规划", "延迟满足", "精打细算"],
+                    explanation: "这反映了你的消费风格：是为当下买单，还是为未来储蓄？"
+                },
+                {
+                    q: "你如何看待负债消费（信用卡、分期等）？",
+                    options: [
+                        "可以接受，先享受再还",
+                        "适度可以，但不能超出还款能力",
+                        "尽量避免，只在大件消费时考虑",
+                        "完全不接受，有多少花多少"
+                    ],
+                    types: ["超前消费", "适度负债", "谨慎负债", "现金至上"],
+                    explanation: "这反映了你对财务风险和即时满足的态度。"
+                },
+                {
+                    q: "如果你突然获得一笔意外之财（比如奖金），你会？",
+                    options: [
+                        "犒劳自己，买一直想买的东西",
+                        "存起来，增加安全感",
+                        "投资理财，让钱生钱",
+                        "一部分消费，一部分存起来"
+                    ],
+                    types: ["享乐型", "储蓄型", "投资型", "平衡型"],
+                    explanation: "意外之财的处理方式，最能体现你的消费倾向。"
+                },
+                {
+                    q: "买东西时，你更在意什么？",
+                    options: [
+                        "品牌和品质，贵一点没关系",
+                        "性价比，不一定要最好的但要对得起价格",
+                        "价格便宜，能用就行",
+                        "是否真正需要，避免冲动消费"
+                    ],
+                    types: ["品质导向", "性价比导向", "价格导向", "理性导向"],
+                    explanation: "这反映了你的消费决策逻辑：追求品质、性价比还是最低价格？"
+                },
+                {
+                    q: "你如何看待「买买买」带来的快乐？",
+                    options: [
+                        "购物是重要的快乐来源，值得投入",
+                        "购物能带来短暂的快乐，但不是长久之计",
+                        "物质带来的快乐有限，精神满足更重要",
+                        "购物快乐是消费主义的陷阱"
+                    ],
+                    types: ["物质愉悦", "物质认知", "精神导向", "批判消费"],
+                    explanation: "这反映了你对物质消费与幸福感关系的理解。"
+                }
+            ],
+            life: [
+                {
+                    q: "周末你更希望怎么度过？",
+                    options: [
+                        "安排丰富的活动，社交、娱乐、学习全都要",
+                        "完全放空，在家躺着打游戏或刷剧",
+                        "做一些有意义的事，比如健身、读书、陪伴家人",
+                        "看心情，没有固定计划"
+                    ],
+                    types: ["高能量型", "低功耗型", "成长型", "随性型"],
+                    explanation: "周末安排反映你的生活节奏偏好和能量管理方式。"
+                },
+                {
+                    q: "你更喜欢什么样的生活节奏？",
+                    options: [
+                        "快节奏，每天都很充实才觉得有价值",
+                        "慢节奏，享受生活中的小确幸",
+                        "有快有慢，张弛有度",
+                        "无所谓快慢，适应就好"
+                    ],
+                    types: ["高压充实", "慢生活", "平衡型", "适应型"],
+                    explanation: "生活节奏偏好反映了你对时间价值的不同理解。"
+                },
+                {
+                    q: "面对生活中的压力，你通常怎么应对？",
+                    options: [
+                        "硬扛着，压力是前进的动力",
+                        "找朋友倾诉，说出来会好受些",
+                        "转移注意力，做喜欢的事放松",
+                        "自我调节，分析压力来源并解决"
+                    ],
+                    types: ["抗压型", "社交型", "回避型", "分析型"],
+                    explanation: "压力应对方式反映了你的情绪管理策略。"
+                },
+                {
+                    q: "你如何看待「躺平」？",
+                    options: [
+                        "不认可，人应该不断奋斗",
+                        "可以理解，是面对压力的自我保护",
+                        "支持，与其内卷不如躺平",
+                        "看情况，适度躺平可以调节身心"
+                    ],
+                    types: ["奋斗主义", "理解躺平", "躺平主义", "平衡观点"],
+                    explanation: "对躺平的态度反映了你对奋斗与休息的价值判断。"
+                },
+                {
+                    q: "什么样的生活状态让你更有满足感？",
+                    options: [
+                        "不断突破自己，达成新目标",
+                        "稳定安逸，不用为明天发愁",
+                        "与家人朋友相处融洽，人际关系和谐",
+                        "有自由支配的时间和空间"
+                    ],
+                    types: ["成就导向", "安全导向", "关系导向", "自由导向"],
+                    explanation: "满足感来源反映了你人生追求的核心方向。"
+                }
+            ],
+            work: [
+                {
+                    q: "你更倾向于什么样的工作？",
+                    options: [
+                        "高薪高压，趁年轻多赚钱",
+                        "稳定清闲，工作生活平衡",
+                        "有挑战性的，能学到东西最重要",
+                        "自己喜欢的，收入够用就行"
+                    ],
+                    types: ["高薪导向", "稳定导向", "成长导向", "兴趣导向"],
+                    explanation: "工作选择反映了你对职业的核心诉求：金钱、稳定、成长还是兴趣？"
+                },
+                {
+                    q: "如果有一份工作的工资比现在高50%，但需要经常加班，你会？",
+                    options: [
+                        "接受，收入提升比什么都重要",
+                        "拒绝，时间比钱更重要",
+                        "考虑一下，看具体情况",
+                        "先接受，干一段时间再说"
+                    ],
+                    types: ["金钱优先", "时间优先", "理性权衡", "机会导向"],
+                    explanation: "这反映了你如何权衡收入与时间价值。"
+                },
+                {
+                    q: "你如何看待「创业」？",
+                    options: [
+                        "有机会一定要尝试，不甘心一直打工",
+                        "风险太大，还是安稳上班好",
+                        "有合适的项目和团队才考虑",
+                        "创业不是唯一出路，打工也能实现价值"
+                    ],
+                    types: ["创业冲动", "求稳心态", "条件导向", "务实心态"],
+                    explanation: "对创业的态度反映了你对职业风险的接受度和事业追求。"
+                },
+                {
+                    q: "工作中遇到不合理的安排，你会？",
+                    options: [
+                        "直接提出来，据理力争",
+                        "私下找领导沟通，委婉表达",
+                        "先接受，找机会再说",
+                        "忍着，多一事不如少一事"
+                    ],
+                    types: ["直接对抗", "柔性沟通", "策略应对", "隐忍顺从"],
+                    explanation: "这反映了你在职场中的沟通风格和边界意识。"
+                },
+                {
+                    q: "你工作的主要动力是什么？",
+                    options: [
+                        "赚钱养家，改善生活",
+                        "实现自我价值，获得成就感",
+                        "积累经验，为将来打基础",
+                        "融入社会，不与社会脱节"
+                    ],
+                    types: ["经济驱动", "成就驱动", "成长驱动", "社交驱动"],
+                    explanation: "工作动力反映了你工作的核心目的和价值观。"
+                }
+            ],
+            social: [
+                {
+                    q: "你更喜欢什么样的社交方式？",
+                    options: [
+                        "喜欢热闹，人越多越好",
+                        "三五好友小聚，人太多反而累",
+                        "一对一深入交流，不喜欢大场面",
+                        "尽量减少社交，更喜欢独处"
+                    ],
+                    types: ["社交型", "小圈子型", "深度社交型", "独处型"],
+                    explanation: "社交偏好反映了你的能量来源和人际关系风格。"
+                },
+                {
+                    q: "在社交场合，你通常是？",
+                    options: [
+                        "主动搭话，很快就能融入",
+                        "先观察，熟悉了才能放开",
+                        "等着别人来找我说话",
+                        "尽量找理由早点离开"
+                    ],
+                    types: ["主动型", "观察型", "被动型", "回避型"],
+                    explanation: "这反映了你在社交中的主动性程度。"
+                },
+                {
+                    q: "你更容易信任什么样的人？",
+                    options: [
+                        "认识很久的老朋友",
+                        "有共同价值观的人",
+                        "看对方的行为，跟认识时间无关",
+                        "不轻易信任任何人"
+                    ],
+                    types: ["时间信任", "价值信任", "行为信任", "谨慎信任"],
+                    explanation: "信任建立方式反映了你的人际判断标准。"
+                },
+                {
+                    q: "你对「社交」的整体看法是？",
+                    options: [
+                        "社交很重要，是事业和生活的必需品",
+                        "适度社交就好，太多会消耗精力",
+                        "社交很累，能免则免",
+                        "社交要看场合，有意义的才值得投入"
+                    ],
+                    types: ["社交重视", "适度社交", "社交负担", "选择性社交"],
+                    explanation: "这反映了你对社交价值的整体认知。"
+                },
+                {
+                    q: "当朋友向你借钱时，你会？",
+                    options: [
+                        "能帮就帮，朋友之间应该互相帮助",
+                        "看金额大小和关系亲疏决定",
+                        "委婉拒绝，借钱伤感情",
+                        "借出去但不指望还，就当送给对方"
+                    ],
+                    types: ["热心助人", "理性判断", "边界清晰", "豁达心态"],
+                    explanation: "借钱态度反映了你在友情与金钱之间的平衡。"
+                }
+            ],
+            family: [
+                {
+                    q: "你认为理想的婚姻状态是？",
+                    options: [
+                        "两个人平等相处，共同成长",
+                        "男主外女主内，分工明确",
+                        "各自保持独立空间，不过多干涉",
+                        "没有标准，找到适合的相处方式最重要"
+                    ],
+                    types: ["平等共进", "传统分工", "独立自主", "灵活适应"],
+                    explanation: "婚姻观反映了你对亲密关系的基本期待。"
+                },
+                {
+                    q: "如果父母和你的意见有分歧，你会？",
+                    options: [
+                        "听父母的，他们经验更丰富",
+                        "坚持自己的，父母不能替我做主",
+                        "耐心沟通，争取达成一致",
+                        "表面答应，实际上按自己想的做"
+                    ],
+                    types: ["孝顺顺从", "独立自主", "沟通协调", "阳奉阴违"],
+                    explanation: "这反映了你在家庭关系中的独立性和沟通方式。"
+                },
+                {
+                    q: "你认为，在教育孩子方面，最重要的是？",
+                    options: [
+                        "学习成绩，将来才有竞争力",
+                        "品德培养，做一个正直的人",
+                        "快乐成长，童年不应该有太多压力",
+                        "培养独立能力，学会自己解决问题"
+                    ],
+                    types: ["学业优先", "品德优先", "快乐优先", "能力优先"],
+                    explanation: "教育观反映了你对下一代的期望和价值观传递。"
+                },
+                {
+                    q: "事业和家庭发生冲突时，你会？",
+                    options: [
+                        "以事业为重，家庭应该理解支持",
+                        "以家庭为重，工作再找就有",
+                        "尽量平衡，实在不行看具体情况",
+                        "提前规划，尽量避免冲突发生"
+                    ],
+                    types: ["事业优先", "家庭优先", "动态平衡", "提前预防"],
+                    explanation: "这反映了你如何权衡事业与家庭的关系。"
+                },
+                {
+                    q: "你觉得应该如何对待年迈的父母？",
+                    options: [
+                        "亲自照顾，这是子女的责任",
+                        "出钱请人照顾，不耽误自己工作",
+                        "送到养老院，专业的人做专业的事",
+                        "尊重父母的意愿，按他们想要的方式安排"
+                    ],
+                    types: ["亲力亲为", "经济支持", "专业托管", "尊重意愿"],
+                    explanation: "这反映了你对孝道和养老责任的理解。"
+                }
+            ]
+        };
+        
+        const typeColors = {
+            world: { accent: 'var(--accent)', class: 'type-world' },
+            consume: { accent: 'var(--accent2)', class: 'type-consume' },
+            life: { accent: 'var(--accent3)', class: 'type-life' },
+            work: { accent: 'var(--accent4)', class: 'type-work' },
+            social: { accent: 'var(--accent5)', class: 'type-social' },
+            family: { accent: 'var(--accent6)', class: 'type-family' }
+        };
+        
+        const dimensionNames = {
+            world: '世界观', consume: '消费观', life: '生活观',
+            work: '工作观', social: '社会观', family: '家庭观'
+        };
+        
+        const dimensionIcons = {
+            world: '🌱', consume: '💰', life: '🏠',
+            work: '💼', social: '👥', family: '❤️'
+        };
+        
+        // 状态管理
+        let allQuestions = [];
+        let currentIndex = 0;
+        let answers = {};
+        let scores = { world: 0, consume: 0, life: 0, work: 0, social: 0, family: 0 };
+        
+        function startTest() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            
+            // 打乱题目顺序，但保持维度内顺序
+            const types = ['world', 'consume', 'life', 'work', 'social', 'family'];
+            allQuestions = [];
+            types.forEach(type => {
+                questions[type].forEach((q, i) => {
+                    allQuestions.push({ ...q, type, indexInType: i + 1 });
+                });
+            });
+            
+            // 打乱整体顺序
+            allQuestions = allQuestions.sort(() => Math.random() - 0.5);
+            
+            // 初始化维度标签
+            const tabsHtml = types.map(t => 
+                `<div class="dim-tab" data-type="${t}">${dimensionIcons[t]} ${dimensionNames[t]}</div>`
+            ).join('');
+            document.getElementById('dimensionTabs').innerHTML = tabsHtml;
+            
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            const q = allQuestions[currentIndex];
+            const typeConfig = typeColors[q.type];
+            
+            document.getElementById('progressText').textContent = `第 ${currentIndex + 1} 题 / 共 ${allQuestions.length} 题`;
+            
+            // 计算当前维度进度
+            const typeCount = allQuestions.filter((item, idx) => item.type === q.type && idx <= currentIndex).length;
+            document.getElementById('dimensionProgress').textContent = `${dimensionNames[q.type]} ${typeCount}/5`;
+            
+            document.getElementById('progressFill').style.width = `${((currentIndex + 1) / allQuestions.length) * 100}%`;
+            
+            // 更新维度标签高亮
+            document.querySelectorAll('.dim-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.type === q.type);
+            });
+            
+            document.getElementById('questionNum').textContent = currentIndex + 1;
+            document.getElementById('questionType').className = `question-type ${typeConfig.class}`;
+            document.getElementById('questionType').textContent = `${dimensionIcons[q.type]} ${dimensionNames[q.type]}`;
+            document.getElementById('questionText').textContent = q.q;
+            
+            const optionsHtml = q.options.map((opt, i) => `
+                <div class="option" onclick="selectAnswer(${i}, this)">
+                    <div class="option-label">${['A', 'B', 'C', 'D'][i]}</div>
+                    <div class="option-text">${opt}</div>
+                </div>
+            `).join('');
+            document.getElementById('options').innerHTML = optionsHtml;
+            
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('explanation').innerHTML = `<strong>💡 解析：</strong>${q.explanation}<br><br>你的选择反映了<strong>${q.types[0]}</strong>倾向。`;
+            document.getElementById('nextBtn').classList.remove('show');
+        }
+        
+        function selectAnswer(index, el) {
+            const card = el.closest('.card');
+            if (card.querySelector('.option.disabled')) return;
+            
+            card.querySelectorAll('.option').forEach(o => o.classList.add('disabled'));
+            el.classList.add('selected');
+            
+            const q = allQuestions[currentIndex];
+            answers[`${q.type}_${q.indexInType}`] = index;
+            scores[q.type] += index; // 用选项索引作为分数（0-3）
+            
+            document.getElementById('explanation').style.display = 'block';
+            document.getElementById('nextBtn').classList.add('show');
+        }
+        
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex >= allQuestions.length) {
+                showResult();
+            } else {
+                const card = document.getElementById('questionCard');
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                    card.style.transition = 'all 0.3s ease';
+                    showQuestion();
+                }, 200);
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            
+            // 生成各维度得分概览
+            const scoreOverviewHtml = Object.keys(scores).map(type => {
+                const avg = scores[type] / 5;
+                const percentage = Math.round((avg / 3) * 100);
+                return `
+                    <div class="score-item" data-type="${type}">
+                        <div class="score-icon">${dimensionIcons[type]}</div>
+                        <div class="score-value">${percentage}%</div>
+                        <div class="score-label">${dimensionNames[type]}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('scoreOverview').innerHTML = scoreOverviewHtml;
+            
+            // 生成详细解析
+            const resultDetails = [];
+            const types = ['world', 'consume', 'life', 'work', 'social', 'family'];
+            types.forEach(type => {
+                const avg = scores[type] / 5;
+                let tendency = '';
+                if (avg <= 0.75) tendency = '倾向于 A 选项';
+                else if (avg <= 1.5) tendency = '倾向于 A/B 之间';
+                else if (avg <= 2.25) tendency = '倾向于 B/C 之间';
+                else tendency = '倾向于 D 选项';
+                
+                resultDetails.push(`
+                    <div class="result-section">
+                        <div class="result-section-title">${dimensionIcons[type]} ${dimensionNames[type]}</div>
+                        <div class="result-section-content">
+                            平均得分倾向：${tendency}<br>
+                            这反映了你在${dimensionNames[type]}方面的核心价值观。
+                        </div>
+                    </div>
+                `);
+            });
+            document.getElementById('resultDetails').innerHTML = resultDetails.join('');
+        }
+        
+        async function submitResult() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('请输入你的名字');
+                return;
+            }
+            
+            // 计算总得分
+            const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+            const avgScore = totalScore / 30;
+            const percentage = Math.round((avgScore / 3) * 100);
+            
+            // 提交到 Supabase
+            const SUPABASE_URL = 'https://jufodimlnwkzxktrunjx.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable_sdXOBqMrwiQPHib0NW3zPg_0ihQwwHc';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/assessment_results`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        world_score: scores.world,
+                        consume_score: scores.consume,
+                        life_score: scores.life,
+                        work_score: scores.work,
+                        social_score: scores.social,
+                        family_score: scores.family,
+                        total_score: percentage,
+                        created_at: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('提交成功！点击查看排行榜');
+                    window.location.href = 'assessment-leaderboard.html';
+                } else {
+                    throw new Error('提交失败');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('提交失败，请稍后重试');
+            }
+        }
+    </script>
+</body>
+</html>
