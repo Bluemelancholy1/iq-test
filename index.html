@@ -339,7 +339,7 @@
     let myId = localStorage.getItem(MY_ID_KEY);
     let playerName = localStorage.getItem('iq_player_name') || '';
 
-    let questionTimeLeft = 10;
+    let questionTimeLeft = 20;
     let questionTimerInterval = null;
     let currentShuffledOptions = []; // 存储当前题目的打乱后选项
     let currentCorrectIndex = -1;    // 存储当前题目正确答案的新索引
@@ -426,7 +426,7 @@
         const typeEl = document.getElementById('qType');
         typeEl.textContent = q.typeLabel;
         typeEl.className = 'question-type type-' + q.type;
-        questionTimeLeft = 10;
+        questionTimeLeft = 20;
         updateQuestionTimer();
         document.getElementById('qText').textContent = q.question;
         const optionsEl = document.getElementById('options');
